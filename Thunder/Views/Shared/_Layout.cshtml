@@ -1,49 +1,156 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@functions{
+    public string GetUserClaim(string type)
+    {
+        return User.Claims.Where(x => x.Type.Contains(type.ToLower())).Select(x => x.Value).FirstOrDefault();
+    }
+}
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Thunder</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Thunder.styles.css" asp-append-version="true" />
+	<title>@Configuration.GetSection("Template")["SiteName"]</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+	<link rel="icon" href="~/img/icon.ico" type="image/x-icon"/>
+	<script src="~/js/plugin/webfont/webfont.min.js"></script>
+	<script>
+		WebFont.load({
+			google: {"families":["Lato:300,400,700,900"]},
+			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['css/fonts.min.css']},
+			active: function() {
+				sessionStorage.fonts = true;
+			}
+		});
+	</script>
+	<link rel="stylesheet" href="~/css/bootstrap.min.css">
+	<link rel="stylesheet" href="~/css/atlantis.css">
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Thunder</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<body data-background-color = "@Configuration.GetSection("Template")["BodyColor"]">
+	<div class="wrapper">
+		<div class="main-header">
+			<div class="logo-header" data-background-color= "@Configuration.GetSection("Template")["LogoHeaderColor"]">				
+				<a asp-controller="Home" asp-action="Index" class="logo">
+					<img src="~/img/logo.svg" alt="navbar brand" class="navbar-brand">
+				</a>
+				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon">
+						<i class="icon-menu"></i>
+					</span>
+				</button>
+				<button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
+				<div class="nav-toggle">
+					<button class="btn btn-toggle toggle-sidebar">
+						<i class="icon-menu"></i>
+					</button>
+				</div>
+			</div>
+			<nav class="navbar navbar-header navbar-expand-lg" data-background-color = "@Configuration.GetSection("Template")["NavBarHeaderColor"]">							
+				<partial name="_NavigationBar" />					
+			</nav>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Thunder - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+		</div>
+
+		<div class="sidebar sidebar-style-2" data-background-color = "@Configuration.GetSection("Template")["SideBarColor"]">			
+			<div class="sidebar-wrapper scrollbar scrollbar-inner">
+				<div class="sidebar-content">
+					<div class="user">
+						<div class="avatar-sm float-left mr-2">
+							<img src="~/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+						</div>
+						<div class="info">
+							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+								<span>
+									@GetUserClaim("givenname")
+									<span class="user-level">Administrator</span>
+									<span class="caret"></span>
+								</span>
+							</a>
+							<div class="clearfix"></div>
+
+							<div class="collapse in" id="collapseExample">
+								<ul class="nav">
+									<li>
+										<a href="#profile">
+											<span class="link-collapse">My Profile</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<ul class="nav nav-primary">
+						<partial name="_Menu" />					
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="main-panel">
+			<div class="container">
+				@RenderBody()
+			</div>
+
+			<footer class="footer">
+				<div class="container-fluid">
+					<nav class="pull-left">
+						<ul class="nav">
+							<li class="nav-item">
+								<a class="nav-link" href="@Configuration.GetSection("Template")["CopyrightUrl"]">
+									@Configuration.GetSection("Template")["CopyrightName"]
+								</a>
+							</li>
+						</ul>
+					</nav>
+					<div class="copyright ml-auto">
+						@Configuration.GetSection("Template")["ReleaseYear"], by <a href="@Configuration.GetSection("Template")["DeveloperUrl"]"> @Configuration.GetSection("Template")["DeveloperName"] </a>
+					</div>				
+				</div>
+			</footer>
+		</div>				
+	</div>
 </body>
+	<!--   Core JS Files   -->
+	<script src="~/js/core/jquery.3.2.1.min.js"></script>
+	<script src="~/js/core/popper.min.js"></script>
+	<script src="~/js/core/bootstrap.min.js"></script>
+	<!-- jQuery UI -->
+	<script src="~/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+	<script src="~/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+	<!-- jQuery Scrollbar -->
+	<script src="~/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+	<!-- Moment JS -->
+	<script src="~/js/plugin/moment/moment.min.js"></script>
+	<!-- Datatables -->
+	<script src="~/js/plugin/datatables/datatables.min.js"></script>
+	<!-- Bootstrap Notify -->
+	<script src="~/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+	<!-- Bootstrap Toggle -->
+	<script src="~/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+	<!-- Dropzone -->
+	<script src="~/js/plugin/dropzone/dropzone.min.js"></script>
+	<!-- DateTimePicker -->
+	<script src="~/js/plugin/datepicker/bootstrap-datetimepicker.min.js"></script>
+	<!-- Bootstrap Tagsinput -->
+	<script src="~/js/plugin/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+	<!-- Bootstrap Wizard -->
+	<script src="~/js/plugin/bootstrap-wizard/bootstrapwizard.js"></script>
+	<!-- jQuery Validation -->
+	<script src="~/js/plugin/jquery.validate/jquery.validate.min.js"></script>
+	<!-- Summernote -->
+	<script src="~/js/plugin/summernote/summernote-bs4.min.js"></script>
+	<!-- Select2 -->
+	<script src="~/js/plugin/select2/select2.full.min.js"></script>
+	<!-- Owl Carousel -->
+	<script src="~/js/plugin/owl-carousel/owl.carousel.min.js"></script>
+	<!-- Magnific Popup -->
+	<script src="~/js/plugin/jquery.magnific-popup/jquery.magnific-popup.min.js"></script>
+	<!-- Atlantis JS -->
+	<script src="~/js/atlantis.min.js"></script>
+	<!-- Site JS -->
+	<script src="~/js/site.js"></script>	
 </html>
+
+@await RenderSectionAsync("Scripts", required: false)
