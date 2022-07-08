@@ -1,4 +1,14 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+﻿function notify(inputTitle = "Notification", inputMessage = null, inputType = "Secondary") {
+	$.notify({
+		icon: "flaticon-alarm-1",
+		title: inputTitle,
+		message: inputMessage,
+	}, {
+		type: inputType,
+		placement: {
+			from: "bottom",
+			align: "right"
+		},
+		time: 1000,
+	});
+}
