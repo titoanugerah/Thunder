@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Thunder.Models
 {
@@ -8,12 +9,20 @@ namespace Thunder.Models
         public int Id { get; set; } 
         [Required]
         public string Name { get; set; }
-        [Required]
-        public string Description { get; set; } 
+        [DefaultValue("A")]
+        [MaxLength(1)]
+        public string Accreditation { get;set; }
+        public string Description { get; set; }
+        [DefaultValue(0)]
+        public int TuitionFee { set; get; }
         public string Address { set; get; }
         [Required]
         public int CityId { set; get; }
         public City City { set; get; }
+        public string MapsUrl { set; get; }
+        public string CuriculumFile { set; get; }
+        public List<UniversityFacility> UniversityFacilities { set; get; }
+        public string Logo { set; get; }
 
     }
 }
