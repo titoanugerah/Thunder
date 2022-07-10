@@ -6,6 +6,8 @@ namespace Thunder.Models
     {
         [Key]
         public int Id { get; set; }
+        public int UniversityId { set; get; }
+        public University University { set; get; }
         public int FacilityId { set; get; }
         public Facility Facility { set; get; }
         public int Value { set; get; }

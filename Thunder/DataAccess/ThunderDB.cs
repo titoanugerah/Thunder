@@ -35,6 +35,14 @@ namespace Thunder.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UniversityFacility>(entity =>
+            {
+                entity.HasOne(column => column.University)
+                .WithMany(column => column.UniversityFacilities)
+                .HasForeignKey(column => column.UniversityId);
+            });
+
         }
 
     }
