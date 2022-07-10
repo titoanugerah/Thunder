@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Thunder.Models
 {
@@ -11,7 +12,8 @@ namespace Thunder.Models
         [Required]
         public string Email { get; set; }
         [Required]
-        public string RoleId { get; set; }
+        public int RoleId { get; set; }
+        [ForeignKey("RoleId")]
         public Role Role { get; set; }
     }
 }

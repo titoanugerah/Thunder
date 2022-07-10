@@ -8,13 +8,13 @@ namespace Thunder.DataAccess
     {
         private readonly IConfiguration configuration;
         private readonly ILoggerFactory logger;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        //private readonly IHttpContextAccessor httpContextAccessor;
 
-        public ThunderDB(IConfiguration _configuration, ILoggerFactory _logger, IHttpContextAccessor _httpContextAccessor)
+        public ThunderDB(IConfiguration _configuration, ILoggerFactory _logger)
         {
             configuration = _configuration;
             logger = _logger;
-            httpContextAccessor = _httpContextAccessor;
+            //httpContextAccessor = _httpContextAccessor;
         }
 
         public DbSet<User> User { set; get; }
@@ -27,9 +27,11 @@ namespace Thunder.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder)
         {
-            dbContextOptionsBuilder.UseLoggerFactory(logger);
-            dbContextOptionsBuilder.EnableSensitiveDataLogging();
-            dbContextOptionsBuilder.UseMySQL(configuration.GetConnectionString("ThunderDB"));
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 27));            
+            dbContextOptionsBuilder
+                .UseMySql(configuration.GetConnectionString("ThunderDB"), serverVersion)
+                .EnableSensitiveDataLogging()
+                .UseLoggerFactory(logger);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

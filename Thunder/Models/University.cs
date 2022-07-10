@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Thunder.Models
 {
@@ -18,6 +19,7 @@ namespace Thunder.Models
         public string Address { set; get; }
         [Required]
         public int CityId { set; get; }
+        [ForeignKey("CityId")]
         public City City { set; get; }
         public string MapsUrl { set; get; }
         public string CuriculumFile { set; get; }
