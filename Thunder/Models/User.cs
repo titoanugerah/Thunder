@@ -2,7 +2,7 @@
 
 namespace Thunder.Models
 {
-    public class User
+    public class User : Audit
     {
         [Key]
         public int Id { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Thunder.Models
 {
-    public class City
+    public class City : Audit
     {
         public int Id { get; set; }
         public string Name { get; set; }    

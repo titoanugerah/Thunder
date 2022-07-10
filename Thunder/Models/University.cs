@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Thunder.Models
 {
-    public class University
+    public class University : Audit
     {
         [Key]
         public int Id { get; set; } 

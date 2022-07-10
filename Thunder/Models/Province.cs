@@ -2,7 +2,7 @@
 
 namespace Thunder.Models
 {
-    public class Province
+    public class Province : Audit
     {
         [Key]
         public int Id { get; set; }
