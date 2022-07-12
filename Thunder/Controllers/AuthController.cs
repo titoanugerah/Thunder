@@ -59,7 +59,7 @@ namespace Thunder.Controllers
 
             user.Name = GetClaims(claims, "name");
             user.Email = GetClaims(claims, "emailaddress");
-            //user.Image = GetClaims(claims, "picture");
+            user.Image = GetClaims(claims, "picture");
             if (user == null)
             {
                 user.CreatedDate = DateTime.Now;
@@ -82,7 +82,7 @@ namespace Thunder.Controllers
             loggedUser.Add(new Claim("RoleId", user.RoleId.ToString()));
             loggedUser.Add(new Claim("Name", user.Name));
             loggedUser.Add(new Claim("IsExist", user.IsExist.ToString()));
-            //loggedUser.Add(new Claim("Image", user.Image.ToString()));
+            loggedUser.Add(new Claim("Image", user.Image.ToString()));
 
             ClaimsIdentity userIdentity = new ClaimsIdentity(loggedUser, CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal userPrincipal = new ClaimsPrincipal(userIdentity);
