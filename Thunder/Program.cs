@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 using Thunder.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,13 @@ services.AddAuthentication(options =>
 {
     googleOptions.ClientId = configuration["Authentication:ClientId"];
     googleOptions.ClientSecret = configuration["Authentication:ClientSecret"];
+    googleOptions.Scope.Add("profile");
+    googleOptions.Events.OnCreatingTicket = (context) =>
+    {
+        string picture = context.User.GetProperty("picture").GetString();
+        context.Identity.AddClaim(new Claim("picture", picture));
+        return Task.CompletedTask;
+    };
 });
 
 var app = builder.Build();

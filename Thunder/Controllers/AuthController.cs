@@ -35,7 +35,7 @@ namespace Thunder.Controllers
 
         private string GetClaims(List<UserClaim> claims, string key)
         {
-            return claims.Where(claim => claim.Name == "emailaddress").FirstOrDefault().Value;
+            return claims.Where(claim => claim.Name == key).FirstOrDefault().Value;
         }
 
         public async Task<IActionResult> GoogleResponse()
@@ -57,18 +57,24 @@ namespace Thunder.Controllers
                 .Where(user => user.Email == GetClaims(claims, "emailaddress"))
                 .FirstOrDefault();
 
+            user.Name = GetClaims(claims, "name");
+            user.Email = GetClaims(claims, "emailaddress");
+            //user.Image = GetClaims(claims, "picture");
             if (user == null)
             {
-                user.Name = GetClaims(claims, "name");
-                user.Email = GetClaims(claims, "emailaddress");
                 user.CreatedDate = DateTime.Now;
                 user.CreatedById = 1;
                 user.IsExist = 1;
                 user.RoleId = 1;
                 thunderDB.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Added;
                 await thunderDB.User.AddAsync(user);
-                await thunderDB.SaveChangesAsync();
             }
+            else
+            {
+                thunderDB.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                thunderDB.User.Update(user);
+            }
+            await thunderDB.SaveChangesAsync();
 
             List<Claim> loggedUser = new List<Claim>();
             loggedUser.Add(new Claim("Id", user.Id.ToString()));
@@ -76,6 +82,7 @@ namespace Thunder.Controllers
             loggedUser.Add(new Claim("RoleId", user.RoleId.ToString()));
             loggedUser.Add(new Claim("Name", user.Name));
             loggedUser.Add(new Claim("IsExist", user.IsExist.ToString()));
+            //loggedUser.Add(new Claim("Image", user.Image.ToString()));
 
             ClaimsIdentity userIdentity = new ClaimsIdentity(loggedUser, CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal userPrincipal = new ClaimsPrincipal(userIdentity);
