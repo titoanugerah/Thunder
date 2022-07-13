@@ -10,11 +10,20 @@ namespace Thunder.Controllers
             logger= _logger; 
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, "Error Controller - Index");
+                throw;
+            }
         }
 
+        [Route("Error/404")]
         public async Task<IActionResult> NotFound()
         {
             try
@@ -23,7 +32,7 @@ namespace Thunder.Controllers
             }
             catch (Exception error)
             {
-                logger.LogError(error, "Error Controller - Not Found");
+                logger.LogError(error, "Error Controller - Index");
                 throw;
             }
         }
