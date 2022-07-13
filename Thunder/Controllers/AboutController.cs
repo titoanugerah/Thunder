@@ -18,12 +18,7 @@ namespace Thunder.Controllers
         {
             try
             {
-                int totalUser = thunderDB.User
-                    .Count();
-                int newUser = thunderDB.User
-                    .Where(column => column.CreatedDate.Value.Date == DateTime.Now.Date)
-                    .Count();
-                ViewBag.StatisticUser = newUser/totalUser;
+                ViewBag.Content = System.IO.File.ReadAllText("wwwroot/other/about.txt");
                 return View();
             }
             catch (Exception error)

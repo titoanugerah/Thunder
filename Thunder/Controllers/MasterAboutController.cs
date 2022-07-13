@@ -18,6 +18,7 @@ namespace Thunder.Controllers
         {
             try
             {
+                ViewBag.Content = System.IO.File.ReadAllText("wwwroot/other/about.txt");
                 return View();
             }
             catch (Exception error)
@@ -25,6 +26,24 @@ namespace Thunder.Controllers
                 logger.LogError(error, "Master About Controller - Index");
                 throw;
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update([FromForm] string content)
+        {
+            System.IO.File.Delete("wwwroot/other/about.txt");
+            using (StreamWriter writer = new StreamWriter("wwwroot/other/about.txt", true))
+            {
+                {
+                    string output = content;
+                    writer.Write(output);
+                }
+                writer.Close();
+            }
+
+
+            //ViewBag.Content = System.IO.File.WriteAllText("wwwroot/other/about.txt", text.ToString());
+            return StatusCode(200);
         }
     }
 }
