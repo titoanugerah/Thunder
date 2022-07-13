@@ -7,7 +7,7 @@
 	<div class="collapse" id="dashboard">
 		<ul class="nav nav-collapse">
 			<li>
-				<a href="../demo1/index.html">
+				<a asp-controller="Home" asp-action="Index">
 					<span class="sub-item">Dashboard 1</span>
 				</a>
 			</li>									
@@ -20,13 +20,7 @@
 	</span>
 	<h4 class="text-section">Components</h4>
 </li>
-<li class="nav-item">
-	<a href="calendar.html">
-		<i class="far fa-calendar-alt"></i>
-		<p>Calendar</p>
-		<span class="badge badge-info">1</span>
-	</a>
-</li>	
+
 <li class="nav-item">
 	<a asp-controller="Auth" asp-action="Index">
 		<i class="far fa-calendar-alt"></i>
@@ -34,10 +28,4 @@
 		<span class="badge badge-info">1</span>
 	</a>
 </li>	
-<li class="nav-item">
-	<a asp-controller="Auth" asp-action="Logout">
-		<i class="far fa-calendar-alt"></i>
-		<p>Logout</p>
-		<span class="badge badge-info">1</span>
-	</a>
-</li>	
+	

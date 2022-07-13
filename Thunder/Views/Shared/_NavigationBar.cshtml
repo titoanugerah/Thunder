@@ -1,26 +1,26 @@
 ﻿@using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 @functions{
-		private bool IsAuthenticated()
-		{
-			return User.Claims.Any();
-		}
+	private bool IsAuthenticated()
+	{
+		return User.Claims.Any();
+	}
 
-		public string GetUserClaim(string type)
-		{
-			return User.Claims.Where(x => x.Type == type).Select(x => x.Value).FirstOrDefault();
-		}
+	public string GetUserClaim(string type)
+	{
+		return User.Claims.Where(x => x.Type == type).Select(x => x.Value).FirstOrDefault();
+	}
 
-		public string GetImage()
+	public string GetImage()
+	{
+		if (IsAuthenticated())
 		{
-			if (IsAuthenticated())
-			{
-				return GetUserClaim("Image");
-			}
-			else
-			{
-				 return $"img/profile.jpg";
-			}
+			return GetUserClaim("Image");
+		}
+		else
+		{
+				return $"img/profile.jpg";
+		}
 	}	
 }
 
@@ -43,7 +43,7 @@
 				<i class="fa fa-search"></i>
 			</a>
 		</li>
-		<li class="nav-item dropdown hidden-caret">
+		@*<li class="nav-item dropdown hidden-caret">
 			<a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<i class="fa fa-bell"></i>
 				<span class="notification">4</span>
@@ -71,7 +71,7 @@
 					<a class="see-all" href="javascript:void(0);">See all notifications<i class="fa fa-angle-right"></i> </a>
 				</li>
 			</ul>
-		</li>
+		</li>*@
 
 		<li class="nav-item dropdown hidden-caret">
 			<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">

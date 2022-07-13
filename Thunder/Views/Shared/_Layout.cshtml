@@ -1,10 +1,27 @@
 ﻿@using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 @functions{
-    public string GetUserClaim(string type)
-    {
-        return User.Claims.Where(x => x.Type.Contains(type.ToLower())).Select(x => x.Value).FirstOrDefault();
-    }
+	private bool IsAuthenticated()
+	{
+		return User.Claims.Any();
+	}
+
+	public string GetUserClaim(string type)
+	{
+		return User.Claims.Where(x => x.Type == type).Select(x => x.Value).FirstOrDefault();
+	}
+
+	public string GetImage()
+	{
+		if (IsAuthenticated())
+		{
+			return GetUserClaim("Image");
+		}
+		else
+		{
+				return $"img/profile.jpg";
+		}
+	}	
 }
 
 <!DOCTYPE html>
@@ -57,27 +74,16 @@
 				<div class="sidebar-content">
 					<div class="user">
 						<div class="avatar-sm float-left mr-2">
-							<img src="~/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+							<img src="@GetImage()" alt="..." class="avatar-img rounded-circle">
 						</div>
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
 									@GetUserClaim("Name")
-									<span class="user-level">Administrator</span>
-									<span class="caret"></span>
+									<span class="user-level">@GetUserClaim("Role")</span>
 								</span>
 							</a>
-							<div class="clearfix"></div>
-
-							<div class="collapse in" id="collapseExample">
-								<ul class="nav">
-									<li>
-										<a href="#profile">
-											<span class="link-collapse">My Profile</span>
-										</a>
-									</li>
-								</ul>
-							</div>
+							<div class="clearfix"></div>							
 						</div>
 					</div>
 					<ul class="nav nav-primary">
