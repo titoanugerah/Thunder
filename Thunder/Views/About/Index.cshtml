@@ -1,0 +1,54 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@functions{
+	private bool IsAuthenticated()
+	{
+		return User.Claims.Any();
+	}
+
+	public string GetUserClaim(string type)
+	{
+		return User.Claims.Where(x => x.Type == type).Select(x => x.Value).FirstOrDefault();
+	}
+
+	public string GetImage()
+	{
+		if (IsAuthenticated())
+		{
+			return GetUserClaim("Image");
+		}
+		else
+		{
+				return $"img/profile.jpg";
+		}
+	}	
+}
+
+<div class="panel-header bg-primary-gradient">
+	<div class="page-inner py-5">
+		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+			<div>
+				<h2 class="text-white pb-2 fw-bold">Tentang Kami</h2>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="page-inner mt--5">
+	
+	<div class="row mt--2">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-head-row">
+						<div class="card-title">@Configuration.GetSection("Template")["SiteName"] - @Configuration.GetSection("Template")["SiteDescription"]</div>						
+					</div>
+				</div>
+				<div class="card-body">
+					<p>
+						Aplikasi ini adalah aplikasi lalalla
+					</p>		
+				</div>
+			</div>
+		</div>		
+	</div>	
+</div>
