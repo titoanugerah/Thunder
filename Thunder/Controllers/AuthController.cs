@@ -76,6 +76,10 @@ namespace Thunder.Controllers
             }
             await thunderDB.SaveChangesAsync();
 
+            Role role = thunderDB.Role
+                .Where(column => column.Id == user.RoleId)
+                .FirstOrDefault();
+
             List<Claim> loggedUser = new List<Claim>();
             loggedUser.Add(new Claim("Id", user.Id.ToString()));
             loggedUser.Add(new Claim("Email", user.Email));
@@ -83,6 +87,7 @@ namespace Thunder.Controllers
             loggedUser.Add(new Claim("Name", user.Name));
             loggedUser.Add(new Claim("IsExist", user.IsExist.ToString()));
             loggedUser.Add(new Claim("Image", user.Image.ToString()));
+            loggedUser.Add(new Claim("Role", role.Name));
 
             ClaimsIdentity userIdentity = new ClaimsIdentity(loggedUser, CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal userPrincipal = new ClaimsPrincipal(userIdentity);
