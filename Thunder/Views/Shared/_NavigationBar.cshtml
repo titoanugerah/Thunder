@@ -1,13 +1,27 @@
-﻿@functions{
-	private bool IsAuthenticated()
-	{
-		return User.Claims.Any();
-	}
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@functions{
+		private bool IsAuthenticated()
+		{
+			return User.Claims.Any();
+		}
 
-	public string GetUserClaim(string type)
-    {
-        return User.Claims.Where(x => x.Type == type).Select(x => x.Value).FirstOrDefault();
-    }
+		public string GetUserClaim(string type)
+		{
+			return User.Claims.Where(x => x.Type == type).Select(x => x.Value).FirstOrDefault();
+		}
+
+		public string GetImage()
+		{
+			if (IsAuthenticated())
+			{
+				return GetUserClaim("Image");
+			}
+			else
+			{
+				 return $"img/profile.jpg";
+			}
+	}	
 }
 
 <div class="container-fluid">
@@ -19,7 +33,7 @@
 						<i class="fa fa-search search-icon"></i>
 					</button>
 				</div>
-				<input type="text" placeholder="Search ..." class="form-control">
+				<input type="text" placeholder="Pencarian ..." class="form-control">
 			</div>
 		</form>
 	</div>
@@ -62,42 +76,32 @@
 		<li class="nav-item dropdown hidden-caret">
 			<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
 				<div class="avatar-sm">
-					<img src="@GetUserClaim("Image")" alt="~/img/profile.jpg" class="avatar-img rounded-circle">
+					<img src="@GetImage()" class="avatar-img rounded-circle">
 				</div>
 			</a>
 			<ul class="dropdown-menu dropdown-user animated fadeIn">
 				<div class="dropdown-user-scroll scrollbar-outer">
-					<li>
-						<div class="user-box">
-							@if (IsAuthenticated())
-							{
-								<div class="avatar-lg"><img src="~/img/profile.jpg" alt="image profile" class="avatar-img rounded"></div>
-								<div class="u-text">
+					@if (IsAuthenticated())
+					{
+						<li>
+							<div class="user-box">
+								<div class="avatar-lg"><img src="@GetImage()" alt="image profile" class="avatar-img rounded"></div>
+									<div class="u-text">
 									<h4>@GetUserClaim("Name")</h4>
-									<p class="text-muted">@GetUserClaim("Email")</p><a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
-								</div>								   
-							}
-  							else
-							{
-								<div class="avatar-lg"><img src="~/img/profile.jpg" alt="image profile" class="avatar-img rounded"></div>
-								<div class="u-text">
-									<h4>Login</h4>
+									<p class="text-muted">@GetUserClaim("Email")</p>
 								</div>								   										
-							}
-						</div>
-					</li>
-					<li>
+							</div>
+						</li>
 						<div class="dropdown-divider"></div>
-						@if (IsAuthenticated())
-						{								
-							<a class="dropdown-item" asp-controller="Profile" asp-action="Index">My Profile</a>
+						<li>
+							<a class="dropdown-item" asp-controller="Profile" asp-action="Index">Profil Saya</a>
 							<a class="dropdown-item"  asp-controller="Auth" asp-action="Logout" >Logout</a>
-						}
-						else
-						{								
-							<a class="dropdown-item" asp-controller="Auth" asp-action="Login">Login</a>
-						}
-					</li>
+						</li>
+					}
+					else
+					{								
+						<a class="dropdown-item" asp-controller="Auth" asp-action="Login">Login</a>
+					}
 				</div>
 			</ul>
 		</li>							
