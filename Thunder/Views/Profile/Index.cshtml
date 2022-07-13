@@ -1,0 +1,79 @@
+﻿@functions{
+	private bool IsAuthenticated()
+	{
+		return User.Claims.Any();
+	}
+
+	public string GetUserClaim(string type)
+	{
+		return User.Claims.Where(x => x.Type == type).Select(x => x.Value).FirstOrDefault();
+	}
+
+	public string GetImage()
+	{
+		if (IsAuthenticated())
+		{
+			return GetUserClaim("Image");
+		}
+		else
+		{
+				return $"img/profile.jpg";
+		}
+	}	
+}
+
+<div class="panel-header bg-primary-gradient">
+	<div class="page-inner py-5">
+		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+			<div>
+				<h2 class="text-white pb-2 fw-bold">Profil Saya</h2>
+				<h5 class="text-white op-7 mb-2">Data otomatis ter update dari akun Google Anda</h5>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="page-inner mt--5">
+	
+	<div class="row mt--2">
+		<div class="col-md-10">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-head-row">
+						<div class="card-title">@GetUserClaim("Name")</div>						
+					</div>
+				</div>
+				<div class="card-body row">
+					<div class="form-group col-md-4">
+						<label>Nama</label>
+						<input class="form-control" value="@GetUserClaim("Name")"/>
+					</div>
+
+					<div class="form-group col-md-4">
+						<label>Email</label>
+						<input class="form-control" value="@GetUserClaim("Email")"/>
+					</div>
+
+					<div class="form-group col-md-4">
+						<label>Hak Akses</label>
+						<input class="form-control" value="@GetUserClaim("Role")"/>
+					</div>
+
+				</div>
+			</div>
+		</div>	
+		<div class="col-md-2">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-title">Foto Profil</div>						
+				</div>
+				<div class="card-body">
+					<div class="mr-2">
+						<img src="@GetImage()" alt="..." class="rounded">
+					</div>
+				</div>
+			</div>
+		</div>	
+		
+	</div>
+	
+</div>
