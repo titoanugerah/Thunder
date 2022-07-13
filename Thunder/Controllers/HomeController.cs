@@ -6,21 +6,24 @@ namespace Thunder.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> _logger)
         {
-            _logger = logger;
+            logger = _logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, "Home Controller - Index");
+                throw;
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
