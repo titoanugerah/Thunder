@@ -65,11 +65,12 @@
 			</div>
 			<nav class="navbar navbar-header navbar-expand-lg" data-background-color = "@Configuration.GetSection("Template")["NavBarHeaderColor"]">							
 				<partial name="_NavigationBar" />					
-			</nav>
-
+			</nav>				
 		</div>
 
 		<div class="sidebar sidebar-style-2" data-background-color = "@Configuration.GetSection("Template")["SideBarColor"]">			
+		@if (IsAuthenticated())
+		{
 			<div class="sidebar-wrapper scrollbar scrollbar-inner">
 				<div class="sidebar-content">
 					<div class="user">
@@ -91,7 +92,9 @@
 					</ul>
 				</div>
 			</div>
+		}
 		</div>
+
 
 		<div class="main-panel">
 			<div class="container">

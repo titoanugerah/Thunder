@@ -10,6 +10,7 @@ using Thunder.ViewModel;
 
 namespace Thunder.Controllers
 {
+    [AllowAnonymous]
     public class AuthController : Controller
     {
         private readonly ILogger<AuthController> logger;
@@ -21,84 +22,110 @@ namespace Thunder.Controllers
             thunderDB = _thunderDB; 
         }
 
-        [Authorize]
-        public async Task<IActionResult> Index()
-        {
-            return View();
-        }
-
         public async Task<IActionResult> Login()
         {
-            AuthenticationProperties properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleResponse") };
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+            try
+            {
+                AuthenticationProperties properties = new AuthenticationProperties { RedirectUri = Url.Action("Validate") };
+                return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, "Auth Controller - Login Error");
+                throw;
+            }
         }
 
         private string GetClaims(List<UserClaim> claims, string key)
         {
-            return claims.Where(claim => claim.Name == key).FirstOrDefault().Value;
+            try 
+            { 
+                return claims.Where(claim => claim.Name == key).FirstOrDefault().Value;
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, "Auth Controller - Get Claims Error");
+                throw;
+            }
         }
 
-        public async Task<IActionResult> GoogleResponse()
+        public async Task<IActionResult> Validate()
         {
-            AuthenticateResult result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            List<UserClaim> claims = result.Principal
-                .Identities
-                .FirstOrDefault()
-                .Claims
-                .Select(response => new UserClaim
+            try
+            {
+                AuthenticateResult result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                List<UserClaim> claims = result.Principal
+                    .Identities
+                    .FirstOrDefault()
+                    .Claims
+                    .Select(response => new UserClaim
+                    {
+                        Issuer = response.Issuer,
+                        OriginalIssuer = response.OriginalIssuer,
+                        Type = response.Type,
+                        Value = response.Value
+                    }).ToList();
+
+                User user = thunderDB.User
+                    .Where(user => user.Email == GetClaims(claims, "emailaddress"))
+                    .FirstOrDefault();
+
+                user.Name = GetClaims(claims, "name");
+                user.Email = GetClaims(claims, "emailaddress");
+                user.Image = GetClaims(claims, "picture");
+                if (user == null)
                 {
-                    Issuer = response.Issuer,
-                    OriginalIssuer = response.OriginalIssuer,
-                    Type = response.Type,
-                    Value = response.Value
-                }).ToList();
+                    user.CreatedDate = DateTime.Now;
+                    user.CreatedById = 1;
+                    user.IsExist = 1;
+                    user.RoleId = 1;
+                    thunderDB.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Added;
+                    await thunderDB.User.AddAsync(user);
+                }
+                else
+                {
+                    thunderDB.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    thunderDB.User.Update(user);
+                }
+                await thunderDB.SaveChangesAsync();
 
-            User user = thunderDB.User
-                .Where(user => user.Email == GetClaims(claims, "emailaddress"))
-                .FirstOrDefault();
+                Role role = thunderDB.Role
+                    .Where(column => column.Id == user.RoleId)
+                    .FirstOrDefault();
 
-            user.Name = GetClaims(claims, "name");
-            user.Email = GetClaims(claims, "emailaddress");
-            user.Image = GetClaims(claims, "picture");
-            if (user == null)
-            {
-                user.CreatedDate = DateTime.Now;
-                user.CreatedById = 1;
-                user.IsExist = 1;
-                user.RoleId = 1;
-                thunderDB.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Added;
-                await thunderDB.User.AddAsync(user);
+                List<Claim> loggedUser = new List<Claim>();
+                loggedUser.Add(new Claim("Id", user.Id.ToString()));
+                loggedUser.Add(new Claim("Email", user.Email));
+                loggedUser.Add(new Claim("RoleId", user.RoleId.ToString()));
+                loggedUser.Add(new Claim("Name", user.Name));
+                loggedUser.Add(new Claim("IsExist", user.IsExist.ToString()));
+                loggedUser.Add(new Claim("Image", user.Image.ToString()));
+                loggedUser.Add(new Claim("Role", role.Name));
+
+                ClaimsIdentity userIdentity = new ClaimsIdentity(loggedUser, CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(userIdentity);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
+                return RedirectToAction("Index", "Home");
             }
-            else
+            catch (Exception error)
             {
-                thunderDB.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                thunderDB.User.Update(user);
+                logger.LogError(error, "Auth Controller - Google Response");
+                throw;
             }
-            await thunderDB.SaveChangesAsync();
-
-            Role role = thunderDB.Role
-                .Where(column => column.Id == user.RoleId)
-                .FirstOrDefault();
-
-            List<Claim> loggedUser = new List<Claim>();
-            loggedUser.Add(new Claim("Id", user.Id.ToString()));
-            loggedUser.Add(new Claim("Email", user.Email));
-            loggedUser.Add(new Claim("RoleId", user.RoleId.ToString()));
-            loggedUser.Add(new Claim("Name", user.Name));
-            loggedUser.Add(new Claim("IsExist", user.IsExist.ToString()));
-            loggedUser.Add(new Claim("Image", user.Image.ToString()));
-            loggedUser.Add(new Claim("Role", role.Name));
-
-            ClaimsIdentity userIdentity = new ClaimsIdentity(loggedUser, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal userPrincipal = new ClaimsPrincipal(userIdentity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
-            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Logout() 
         {
-            await HttpContext.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            try
+            { 
+                await HttpContext.SignOutAsync();
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, "Auth Controller - Logout");
+                throw;
+            }
         }
     }
 }
