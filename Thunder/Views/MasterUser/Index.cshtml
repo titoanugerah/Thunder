@@ -1,0 +1,29 @@
+﻿<div class="panel-header bg-primary-gradient">
+	<div class="page-inner py-5">
+		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+			<div>
+				<h2 class="text-white pb-2 fw-bold">Pengelola Pengguna</h2>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="page-inner mt--5">
+	<div class="row mt--2 row">
+	@foreach (User user in ViewBag.Users)
+	{						
+		<div class="col-sm-6 col-md-3" onclick = "OpenUser(@user.Id)">
+			<div class='card '>
+				<div class="p-2">
+					<img class="card-img-top rounded" src="@user.Image">
+				</div>
+				<div class="card-body pt-2">
+					<h4 class="mb-1 fw-bold">@user.Name</h4>
+					<p class="text-muted small mb-2">@user.Email</p>					
+					<p class="text-muted small mb-2">@user.Role.Name</p>					
+				</div>
+			</div>
+		</div>
+	}
+	</div>
+</div>
