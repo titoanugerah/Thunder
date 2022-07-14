@@ -41,9 +41,7 @@ namespace Thunder.Controllers
                 writer.Close();
             }
 
-
-            //ViewBag.Content = System.IO.File.WriteAllText("wwwroot/other/about.txt", text.ToString());
-            return StatusCode(200);
+            return new JsonResult(Ok());
         }
     }
 }
