@@ -27,7 +27,7 @@ namespace Thunder.Controllers
             }
             catch (Exception error)
             {
-                logger.LogError(error, "Master About Controller - Index");
+                logger.LogError(error, "Master User Controller - Index");
                 throw;
             }
         }
