@@ -1,0 +1,202 @@
+﻿<div class="panel-header bg-primary-gradient">
+	<div class="page-inner py-5">
+		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+			<div>
+				<h2 class="text-white pb-2 fw-bold">Pengelola Fasilitas</h2>
+			</div>
+            <div class="ml-md-auto py-2 py-md-0">
+				<button data-toggle="modal" data-target="#addFacilityModal" class="btn btn-white btn-border btn-round mr-2">Tambah</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="page-inner mt--5">
+	<div class="row mt--2 row" id="content">
+
+	</div>
+</div>
+
+<div class="modal fade" id="detailFacilityModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <center>
+                    <h4>Detail Fasilitas</h4>
+                </center>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Nama </label>
+                        <input class="form-control" id="nameInput" name="nameInput" >
+                        <input class="form-control" id="idInput" name="idInput" hidden>
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi</label>
+                        <input class="form-control" id="descriptionInput" name="descriptionInput">
+                    </div>
+                    <div class="form-group">
+                        <label>Digunakan</label>
+                        <select class="form-control" id="isExistInput">
+                            <option value="1">Digunakan</option>   
+                            <option value="0">Tidak Digunakan</option>   
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="Update()">
+                    <div class="spinner-border spinner-border-sm"></div>
+                    Simpan
+                </button>
+                <button type="button" data-dismiss="modal" class="btn btn-secondary">Kembali</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="addFacilityModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <center>
+                    <h4>Tambah Fasilitas</h4>
+                </center>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Nama </label>
+                        <input class="form-control" id="nameAdd" name="nameInput" >
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi</label>
+                        <input class="form-control" id="descriptionAdd" name="descriptionInput">
+                    </div>                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="Add()">
+                    <div class="spinner-border spinner-border-sm"></div>
+                    Simpan
+                </button>
+                <button type="button" data-dismiss="modal" class="btn btn-secondary">Kembali</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $( document ).ready(function(){
+        Get();
+    });
+
+    $('#keyword').on('change', function(){
+        Get();
+    });
+
+    function Get(){
+        $.ajax({
+            type: "GET",
+            dataType: "JSON",
+            contentType: "application/x-www-form-urlencoded",
+            url: "masterFacility/get",
+            data:{
+                keyword : $('#keyword').val()
+            },
+            success: function (result) {
+                var htmlCard= "";
+                    var status = "";
+                result.forEach(function(facility){
+                    if (facility.isExist == 1){
+                        status = "success";
+                    }
+                    else
+                    {
+                        status = "danger";
+                    }
+                    htmlCard = htmlCard + '<div class="col-sm-6 col-md-4"><div class="card card-stats card-' + status + ' card-round" onclick="Detail(' + facility.id + ')"><div class="card-body"><div class="row"><div class="col-12 col-stats"><div class="numbers"><p class="card-title">'+facility.name+'</p></div></div></div></div></div></div>'
+                });
+                $('#content').html(htmlCard);
+            },
+            error: function (result) {
+                console.log(result);
+		        notify("Gagal", "Data gagal di ambil" + result.responseText, "danger");
+            }
+        });
+    }
+
+    function Detail(id){
+        $.ajax({
+            type: "GET",
+            dataType: "JSON",
+            contentType: "application/x-www-form-urlencoded",
+            url: "masterfacility/detail/"+id,
+            success: function (result) {
+                $('#idInput').val(result.id);
+                $('#nameInput').val(result.name);
+                $('#descriptionInput').val(result.description);
+                $('#isExistInput').val(result.isExist).change();
+                $('#detailFacilityModal').modal('show');
+            },
+            error: function (result) {
+                console.log(result);
+				notify("Gagal", "Data gagal di ambil" + result.responseText, "danger");
+            }
+        });
+    }
+
+    function Update(id){
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            contentType: "application/x-www-form-urlencoded",
+            url: "masterfacility/update",
+            data : {
+                Id : $('#idInput').val(),
+                Name : $('#nameInput').val(),
+                Description : $('#descriptionInput').val(),
+                IsExist : $('#isExistInput').val(),
+            },
+            success: function (result) {
+                $('#detailFacilityModal').modal('hide');
+                Get();
+				notify("Berhasil", "pengguna berhasil di update", "success");
+            },
+            error: function (result) {
+                console.log(result);
+				notify("Gagal", "pengguna gagal di update" + result.responseText, "danger");
+            }
+        });
+
+    }
+
+    function Add(){
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            contentType: "application/x-www-form-urlencoded",
+            url: "masterfacility/create",
+            data : {
+                Name : $('#nameAdd').val(),
+                Description : $('#descriptionAdd').val(),
+            },
+            success: function (result) {
+                $('#addFacilityModal').modal('hide');
+                Get();
+				notify("Berhasil", "pengguna berhasil di update", "success");
+            },
+            error: function (result) {
+                console.log(result);
+				notify("Gagal", "pengguna gagal di update" + result.responseText, "danger");
+            }
+        });
+
+    }
+</script>
