@@ -23,7 +23,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <center>
-                    <h4>Detail Fasilitas</h4>
+                    <h4>Detail Universitas</h4>
                 </center>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
@@ -60,24 +60,60 @@
 </div>
 
 <div class="modal fade" id="addUniversityModal" role="dialog">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <center>
-                    <h4>Tambah Fasilitas</h4>
+                    <h4>Tambah Universitas</h4>
                 </center>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height:300px; overflow-y:scroll;">
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>Nama </label>
-                        <input class="form-control" id="nameAdd" name="nameInput" >
+                        <input class="form-control" id="nameAdd" >
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat Lengkap</label>
+                        <textarea class="form-control" id="addressAdd"></textarea>    
+                    </div>
+                    <div class="form-group">
+                        <label>Kota / Kabupaten</label>
+                        <select class="form-control" id="cityIdAdd">
+                            @foreach (City city in ViewBag.Cities)
+                            {
+                                <option value="@city.Id">@city.Name</option>  
+                            }
+                        </select>  
+                    </div>
+                    <div class="form-group">
+                        <label>Link Google Maps </label>
+                        <input class="form-control" id="mapsUrlAdd" >
                     </div>
                     <div class="form-group">
                         <label>Deskripsi</label>
-                        <input class="form-control" id="descriptionAdd" name="descriptionInput">
-                    </div>                    
+                        <textarea class="form-control" id="descriptionAdd"></textarea>    
+                    </div>
+                    <div class="form-group">
+                        <label>Akreditasi</label>
+                        <select class="form-control" id="accreditationAdd">
+                            <option value="A">A (Unggul)</option>  
+                            <option value="B">B (Baik Sekali)</option>  
+                            <option value="C">C (Baik)</option>  
+                            <option value="X">Tidak Ada</option>  
+                        </select>  
+                    </div>
+                    <div class="form-group">
+                        <label>Biaya SPP</label>
+                        <input class="form-control" id="tuitionFeeAdd" >
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-12">Logo Universitas </label>
+                        <input type="file" class="form-control form-control-file" id="fileUpload" name="fileUpload" onchange="getBase64Img()" accept="image/png, image/gif, image/jpeg" required="">
+                        <input type="text" id=imgstring /> 
+                    </div>
+
                 </div>
             </div>
             <div class="modal-footer">
@@ -185,7 +221,14 @@
             url: "masteruniversity/create",
             data : {
                 Name : $('#nameAdd').val(),
+                Address : $('#addressAdd').val(),
                 Description : $('#descriptionAdd').val(),
+                Accreditation : $('#accreditationAdd').val(),
+                TuitionFee : $('#tuitionFeeAdd').val(),
+                CityId  : $('#cityIdAdd').val(),
+                MapsUrl   : $('#mapsUrlAdd').val(),    
+                Logo : $('#imgstring').val(),
+                IsExist : 1
             },
             success: function (result) {
                 $('#addUniversityModal').modal('hide');
@@ -197,6 +240,18 @@
 				notify("Gagal", "pengguna gagal di update" + result.responseText, "danger");
             }
         });
+    }
 
+    function getBase64Img()  {
+        var file = document.querySelector('input[type=file]')['files'][0];
+        var reader = new FileReader();
+        var baseString;
+        reader.onloadend = function () {
+            baseString = reader.result;
+            console.log(baseString); 
+            $('#imgstring').val(baseString);
+        };
+        reader.readAsDataURL(file);
+        return baseString;
     }
 </script>

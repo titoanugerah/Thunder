@@ -21,7 +21,9 @@ namespace Thunder.Controllers
             try
             {
                 ViewBag.Cities = await thunderDB.City
+                    .OrderBy(column => column.Name)
                     .ToListAsync();
+
                 ViewBag.Provinces = await thunderDB.Province
                     .ToListAsync();
                 return View();
@@ -56,6 +58,40 @@ namespace Thunder.Controllers
             catch (Exception error)
             {
                 logger.LogError(error, "Master University Controller - Get");
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(University university)
+        {
+            try
+            {
+                university.CreatedDate = DateTime.Now;
+                university.CuriculumFile = "";
+                thunderDB.Entry(university).State = EntityState.Added;
+                await thunderDB.University.AddAsync(university);
+                await thunderDB.SaveChangesAsync();
+
+                List<Facility> facilities = thunderDB.Facility.ToList();
+                List<UniversityFacility> universityFacilities = new List<UniversityFacility>();
+                foreach (Facility facility in facilities)
+                {
+                    UniversityFacility universityFacility = new UniversityFacility();
+                    universityFacility.UniversityId = university.Id;
+                    universityFacility.FacilityId = facility.Id;
+                    universityFacility.Value = 0;
+                    universityFacility.IsExist = 1;
+                    thunderDB.Entry(universityFacility).State = EntityState.Added;
+                    universityFacilities.Add(universityFacility);
+                }
+                await thunderDB.UniversityFacility.AddRangeAsync(universityFacilities);
+                await thunderDB.SaveChangesAsync();
+                return new JsonResult(Ok());
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, "Master University Controller - Create");
                 throw;
             }
         }

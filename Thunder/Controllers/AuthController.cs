@@ -76,7 +76,6 @@ namespace Thunder.Controllers
                 if (user == null)
                 {
                     user.CreatedDate = DateTime.Now;
-                    user.CreatedById = 1;
                     user.IsExist = 1;
                     user.RoleId = 1;
                     thunderDB.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Added;

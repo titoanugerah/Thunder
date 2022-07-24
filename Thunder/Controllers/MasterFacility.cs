@@ -109,6 +109,20 @@ namespace Thunder.Controllers
                 thunderDB.Entry(facility).State = EntityState.Added;
                 thunderDB.Facility.Add(facility);
                 await thunderDB.SaveChangesAsync();
+
+                List<University> universities = thunderDB.University.ToList();
+                List<UniversityFacility> universityFacilities = new List<UniversityFacility>();
+                foreach (University university in universities)
+                {
+                    UniversityFacility universityFacility = new UniversityFacility();
+                    universityFacility.UniversityId = university.Id;
+                    universityFacility.FacilityId = facility.Id;
+                    universityFacility.Value = 0;
+                    thunderDB.Entry(universityFacility).State = EntityState.Added;
+                    universityFacilities.Add(universityFacility);
+                }
+                await thunderDB.AddRangeAsync(universityFacilities);
+                await thunderDB.SaveChangesAsync();
                 return new JsonResult(Ok());
             }
             catch (Exception error)
