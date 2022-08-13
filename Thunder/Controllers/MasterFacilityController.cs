@@ -5,12 +5,12 @@ using Thunder.Models;
 
 namespace Thunder.Controllers
 {
-    public class MasterFacility : Controller
+    public class MasterFacilityController : Controller
     {
-        private readonly ILogger<MasterFacility> logger;
+        private readonly ILogger<MasterFacilityController> logger;
         private readonly ThunderDB thunderDB;
 
-        public MasterFacility(ILogger<MasterFacility> _logger, ThunderDB _thunderDB)
+        public MasterFacilityController(ILogger<MasterFacilityController> _logger, ThunderDB _thunderDB)
         {
             logger = _logger;
             thunderDB = _thunderDB;
@@ -51,7 +51,7 @@ namespace Thunder.Controllers
             catch (Exception error)
             {
                 logger.LogError(error, "Master Facility Controller - Get");
-                throw;
+                return BadRequest(error.InnerException.Message);
             }
         }
 
@@ -68,7 +68,7 @@ namespace Thunder.Controllers
             catch (Exception error)
             {
                 logger.LogError(error, "Master Facility Controller - Detail");
-                throw;
+                return BadRequest(error.InnerException.Message);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Thunder.Controllers
             catch (Exception error)
             {
                 logger.LogError(error, "Master Facility Controller - Update");
-                throw;
+                return BadRequest(error.InnerException.Message);
             }
         }
 
@@ -128,7 +128,7 @@ namespace Thunder.Controllers
             catch (Exception error)
             {
                 logger.LogError(error, "Master Facility Controller - Create");
-                throw;
+                return BadRequest(error.InnerException.Message);
             }
         }
 

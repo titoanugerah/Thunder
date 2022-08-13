@@ -58,7 +58,7 @@ namespace Thunder.Controllers
             catch (Exception error)
             {
                 logger.LogError(error, "Master University Controller - Get");
-                throw;
+                return BadRequest(error.InnerException.Message);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Thunder.Controllers
             catch (Exception error)
             {
                 logger.LogError(error, "Master University Controller - Create");
-                throw;
+                return BadRequest(error.InnerException.Message);
             }
         }
     }

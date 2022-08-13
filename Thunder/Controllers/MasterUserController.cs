@@ -51,7 +51,7 @@ namespace Thunder.Controllers
             catch (Exception error)
             {
                 logger.LogError(error, "Master User Controller - Detail");
-                throw;
+                return BadRequest(error.InnerException.Message);
             }
         }
 
@@ -74,7 +74,7 @@ namespace Thunder.Controllers
             catch (Exception error)
             {
                 logger.LogError(error, "Master User Controller - Update");
-                throw;
+                return BadRequest(error.InnerException.Message);
             }
         }
 

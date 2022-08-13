@@ -31,17 +31,26 @@ namespace Thunder.Controllers
         [HttpPost]
         public async Task<IActionResult> Update([FromForm] string content)
         {
-            System.IO.File.Delete("wwwroot/other/about.txt");
-            using (StreamWriter writer = new StreamWriter("wwwroot/other/about.txt", true))
+            try
             {
+                System.IO.File.Delete("wwwroot/other/about.txt");
+                using (StreamWriter writer = new StreamWriter("wwwroot/other/about.txt", true))
                 {
-                    string output = content;
-                    writer.Write(output);
+                    {
+                        string output = content;
+                        writer.Write(output);
+                    }
+                    writer.Close();
                 }
-                writer.Close();
+
+                return new JsonResult(Ok());
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, $"Master About Controller - Update Error");
+                return BadRequest(error.InnerException.Message);
             }
 
-            return new JsonResult(Ok());
         }
     }
 }
