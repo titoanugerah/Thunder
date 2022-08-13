@@ -14,6 +14,5 @@ namespace Thunder.Models
         [ForeignKey("FacilityId")]
         public Facility Facility { set; get; }
         public int Value { set; get; }
-        public string Icon { set; get; }
     }
 }

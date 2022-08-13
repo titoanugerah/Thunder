@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Thunder.DataAccess;
 
@@ -10,9 +11,10 @@ using Thunder.DataAccess;
 namespace Thunder.Migrations
 {
     [DbContext(typeof(ThunderDB))]
-    partial class ThunderDBModelSnapshot : ModelSnapshot
+    [Migration("20220813092303_Remove Icon")]
+    partial class RemoveIcon
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
