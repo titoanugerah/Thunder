@@ -9,6 +9,8 @@ var configuration = builder.Configuration;
 // Add services to the container.
 services
     .AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
     .AddRazorRuntimeCompilation();
 
 builder.Services.AddDbContext<ThunderDB>();

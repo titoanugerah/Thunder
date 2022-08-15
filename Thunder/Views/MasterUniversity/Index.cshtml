@@ -27,34 +27,84 @@
                 </center>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
-                <div class="col-md-12">
+            <div class="modal-body" style="max-height:300px; overflow-y:scroll;">
+                <ul class="nav nav-pills nav-secondary" id="pills-tab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#detail" role="tab" aria-controls="pills-home" aria-selected="true">Detail</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#facility" role="tab" aria-controls="pills-profile" aria-selected="false">Fasilitas</a>
+					</li>
+				</ul>
+				<div class="tab-content mt-2 mb-3" id="pills-tabContent">
+					<div class="tab-pane fade show active" id="detail" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <div class="col-md-12">
                     <div class="form-group">
                         <label>Nama </label>
-                        <input class="form-control" id="nameInput" name="nameInput" >
-                        <input class="form-control" id="idInput" name="idInput" hidden>
+                        <input class="form-control" id="idEdit" hidden>
+                        <input class="form-control" id="nameEdit" >
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat Lengkap</label>
+                        <textarea class="form-control" id="addressEdit"></textarea>    
+                    </div>
+                    <div class="form-group">
+                        <label>Kota / Kabupaten</label>
+                        <select class="form-control" id="cityIdEdit">
+                            @foreach (City city in ViewBag.Cities)
+                            {
+                                <option value="@city.Id">@city.Name</option>  
+                            }
+                        </select>  
+                    </div>
+                    <div class="form-group">
+                        <label>Link Google Maps </label>
+                        <input class="form-control" id="mapsUrlEdit" >
                     </div>
                     <div class="form-group">
                         <label>Deskripsi</label>
-                        <input class="form-control" id="descriptionInput" name="descriptionInput">
+                        <textarea class="form-control" id="descriptionEdit"></textarea>    
                     </div>
                     <div class="form-group">
-                        <label>Digunakan</label>
-                        <select class="form-control" id="isExistInput">
-                            <option value="1">Digunakan</option>   
-                            <option value="0">Tidak Digunakan</option>   
-                        </select>
+                        <label>Akreditasi</label>
+                        <select class="form-control" id="accreditationEdit">
+                            <option value="A">A (Unggul)</option>  
+                            <option value="B">B (Baik Sekali)</option>  
+                            <option value="C">C (Baik)</option>  
+                            <option value="X">Tidak Ada</option>  
+                        </select>  
+                    </div>
+                    <div class="form-group">
+                        <label>Biaya SPP</label>
+                        <input class="form-control" id="tuitionFeeEdit" >
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-12">Logo Universitas </label>
+                        <input type="file" class="form-control form-control-file" id="fileUploadEdit" name="fileUpload" onchange="getBase64Img('Edit')" accept="image/png, image/gif, image/jpeg" required="">
+                        <input type="text" id="imgstringEdit" hidden/> 
+                        <img id="imgPreviewEdit"/>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="Update()">
-                    <div class="spinner-border spinner-border-sm"></div>
-                    Simpan
-                </button>
-                <button type="button" data-dismiss="modal" class="btn btn-secondary">Kembali</button>
-            </div>
-        </div>
+			</div>
+			<div class="tab-pane fade" id="facility" role="tabpanel" aria-labelledby="pills-profile-tab">
+@*                <div class="form-group">
+                    <label>Fasilitas A</label>
+                    <select class="form-control">
+                        <option value="1">Ada</option>
+                        <option value="0">Tidak Ada</option>
+                    </select>  
+                </div>
+*@			</div>
+		</div>                
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="Update()">
+            <div class="spinner-border spinner-border-sm"></div>
+            Simpan
+        </button>
+        <button type="button" data-dismiss="modal" class="btn btn-secondary">Kembali</button>
+    </div>
+</div>
     </div>
 
 </div>
@@ -110,8 +160,9 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-md-12">Logo Universitas </label>
-                        <input type="file" class="form-control form-control-file" id="fileUpload" name="fileUpload" onchange="getBase64Img()" accept="image/png, image/gif, image/jpeg" required="">
-                        <input type="text" id=imgstring hidden/> 
+                        <input type="file" class="form-control form-control-file" id="fileUpload" name="fileUpload" onchange="getBase64Img('Add')" accept="image/png, image/gif, image/jpeg" required="">
+                        <input type="text" id="imgstringAdd" hidden/> 
+                        <img id=imgPreviewAdd" >
                     </div>
 
                 </div>
@@ -175,10 +226,29 @@
             contentType: "application/x-www-form-urlencoded",
             url: "masteruniversity/detail/"+id,
             success: function (result) {
-                $('#idInput').val(result.id);
-                $('#nameInput').val(result.name);
-                $('#descriptionInput').val(result.description);
-                $('#isExistInput').val(result.isExist).change();
+                $('#idEdit').val(result.university.id);
+                $('#nameEdit').val(result.university.name);
+                $('#descriptionEdit').val(result.university.description);
+                $('#addressEdit').val(result.university.address);
+                $('#cityIdEdit').val(result.university.cityId).change();
+                $('#mapsUrlEdit').val(result.university.mapsUrl);
+                $('#tuitionFeeEdit').val(result.university.tuitionFee);
+                $('#accreditationEdit').val(result.university.accreditation).change();
+                $('#imgPreviewEdit').attr('src',result.university.logo);
+                $('#imgstringEdit').val(result.university.logo);
+                var htmlFacility = "";
+
+                result.universityFacility.forEach(function(data){
+
+                    if(data.value == 1){
+                        htmlFacility = htmlFacility + '<div class="form-group"><label>' + data.facility.name + '</label><select class="form-control" id="facility' + data.id + '" onchange=UpdateFacility(' + data.id + ')><option value="1" selected>Ada</option><option value="0">Tidak Ada</option></select></div>';
+                    } else {
+                        htmlFacility = htmlFacility + '<div class="form-group"><label>' + data.facility.name + '</label><select class="form-control" id="facility' + data.id + '" onchange=UpdateFacility(' + data.id + ')><option value="1" >Ada</option><option value="0"selected>Tidak Ada</option></select></div>';
+                    }
+                });
+
+                $('#facility').html(htmlFacility);
+                
                 $('#detailUniversityModal').modal('show');
             },
             error: function (result) {
@@ -188,6 +258,27 @@
         });
     }
 
+    function UpdateFacility(id){
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            contentType: "application/x-www-form-urlencoded",
+            url: "masteruniversity/updatefacility",
+            data : {
+                Id : id,
+                Value : $("#facility"+id).val()
+            },
+            success: function (result) {
+				notify("Berhasil", "data berhasil di update", "success");
+            },
+            error: function (result) {
+                console.log(result);
+				notify("Gagal", "pengguna gagal di update" + result.responseText, "danger");
+            }
+        });
+
+    }
+
     function Update(id){
         $.ajax({
             type: "POST",
@@ -195,10 +286,15 @@
             contentType: "application/x-www-form-urlencoded",
             url: "masteruniversity/update",
             data : {
-                Id : $('#idInput').val(),
-                Name : $('#nameInput').val(),
-                Description : $('#descriptionInput').val(),
-                IsExist : $('#isExistInput').val(),
+                Id : $('#idEdit').val(),
+                Name : $('#nameEdit').val(),
+                Description : $('#descriptionEdit').val(),
+                Address : $('#addressEdit').val(),
+                CityId : $('#cityIdEdit').val(),
+                MapsUrl : $('#mapsUrlEdit').val(),
+                TuitionFee : $('#tuitionFeeEdit').val(),
+                Accreditation : $('#accreditationEdit').val(),
+                Logo : $('#imgstringEdit').val()
             },
             success: function (result) {
                 $('#detailUniversityModal').modal('hide');
@@ -242,14 +338,15 @@
         });
     }
 
-    function getBase64Img()  {
+    function getBase64Img(target)  {
         var file = document.querySelector('input[type=file]')['files'][0];
         var reader = new FileReader();
         var baseString;
         reader.onloadend = function () {
             baseString = reader.result;
             console.log(baseString); 
-            $('#imgstring').val(baseString);
+            $('#imgstring'+target).val(baseString);
+            $('#imgPreview'+target).attr('src',baseString);
         };
         reader.readAsDataURL(file);
         return baseString;

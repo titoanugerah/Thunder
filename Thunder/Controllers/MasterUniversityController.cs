@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Thunder.DataAccess;
 using Thunder.Models;
+using Thunder.ViewModel;
 
 namespace Thunder.Controllers
 {
@@ -23,7 +24,6 @@ namespace Thunder.Controllers
                 ViewBag.Cities = await thunderDB.City
                     .OrderBy(column => column.Name)
                     .ToListAsync();
-
                 ViewBag.Provinces = await thunderDB.Province
                     .ToListAsync();
                 return View();
@@ -63,6 +63,35 @@ namespace Thunder.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Update(University updatedUniversity)
+        {
+            try
+            {
+                University university = await thunderDB.University
+                    .Where(column => column.Id == updatedUniversity.Id)
+                    .FirstOrDefaultAsync();
+                university.TuitionFee = updatedUniversity.TuitionFee;
+                university.Logo = updatedUniversity.Logo;
+                university.MapsUrl = updatedUniversity.MapsUrl;
+                university.Accreditation = updatedUniversity.Accreditation;
+                university.Address = updatedUniversity.Address;
+                university.CityId = updatedUniversity.CityId;
+                university.Description = updatedUniversity.Description;
+                university.Name = updatedUniversity.Name;
+                university.UpdatedDate = DateTime.Now;
+                thunderDB.Entry(university).State = EntityState.Modified;
+                thunderDB.University.Update(university);
+                await thunderDB.SaveChangesAsync();
+                return new JsonResult(Ok());
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, $"Master University Controller - Update {updatedUniversity.Id}");
+                return BadRequest(error.InnerException.Message);
+            }
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Create(University university)
         {
             try
@@ -92,6 +121,50 @@ namespace Thunder.Controllers
             catch (Exception error)
             {
                 logger.LogError(error, "Master University Controller - Create");
+                return BadRequest(error.InnerException.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Detail(int id)
+        {
+            try
+            {
+                DetailUniversity detailUniversity = new DetailUniversity();
+                detailUniversity.University = await thunderDB.University
+                    .Where(column => column.Id == id)
+                    .FirstOrDefaultAsync();
+                detailUniversity.UniversityFacility = await thunderDB.UniversityFacility
+                    .Include(table => table.Facility)
+                    .Where(column => column.UniversityId == id)
+                    .ToListAsync();                
+                return new JsonResult(detailUniversity);
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, $"Master University Controller - Detail");
+                return BadRequest(error.InnerException.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateFacility (UpdateUniversityFacility updateUniversityFacility)
+        {
+            try
+            {
+                UniversityFacility universityFacility = await thunderDB.UniversityFacility
+                    .Where(column => column.Id == updateUniversityFacility.Id)
+                    .FirstOrDefaultAsync();
+                universityFacility.Value = updateUniversityFacility.Value;
+                thunderDB.Entry(universityFacility).State = EntityState.Modified;
+                thunderDB.UniversityFacility.Update(universityFacility);
+                await thunderDB.SaveChangesAsync();
+                return new JsonResult(Ok());
+
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, $"Master University Controller - Update Facility {updateUniversityFacility.Id} with value {updateUniversityFacility.Value}");
                 return BadRequest(error.InnerException.Message);
             }
         }
