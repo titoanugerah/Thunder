@@ -8,8 +8,7 @@ namespace Thunder.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public int ProvinceId { set; get; }
-        [ForeignKey("ProvinceId")]
-        public Province Province { set; get; }
+        public List<University> Universities { set; get; }
+
     }
 }

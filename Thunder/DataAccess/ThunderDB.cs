@@ -21,7 +21,6 @@ namespace Thunder.DataAccess
         public DbSet<Role> Role { set; get; }
         public DbSet<University> University { set; get; }
         public DbSet<City> City { set; get; }   
-        public DbSet<Province> Province { set; get; }
         public DbSet<Facility> Facility { set; get; }
         public DbSet<UniversityFacility> UniversityFacility { set; get; }
 
@@ -43,6 +42,13 @@ namespace Thunder.DataAccess
                 entity.HasOne(column => column.University)
                 .WithMany(column => column.UniversityFacilities)
                 .HasForeignKey(column => column.UniversityId);
+            });
+
+            modelBuilder.Entity<City>(entity =>
+            {
+                entity.HasMany(column => column.Universities)
+                .WithOne(column => column.City)
+                .HasForeignKey(column => column.CityId);
             });
 
         }
