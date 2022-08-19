@@ -24,8 +24,6 @@ namespace Thunder.Controllers
                 ViewBag.Cities = await thunderDB.City
                     .OrderBy(column => column.Name)
                     .ToListAsync();
-                ViewBag.Provinces = await thunderDB.Province
-                    .ToListAsync();
                 return View();
             }
             catch (Exception error)
