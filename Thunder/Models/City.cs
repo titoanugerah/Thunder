@@ -8,6 +8,7 @@ namespace Thunder.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
+        public double EducationIndexScore { set; get; }
         public List<University> Universities { set; get; }
 
     }
