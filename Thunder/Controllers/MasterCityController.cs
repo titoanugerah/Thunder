@@ -12,10 +12,14 @@ namespace Thunder.Controllers
     {
         private readonly ILogger<MasterCityController> logger;
         private readonly ThunderDB thunderDB;
-        public MasterCityController(ILogger<MasterCityController> _logger, ThunderDB _thunderDB)
+        private readonly IConfiguration configuration;
+
+
+        public MasterCityController(ILogger<MasterCityController> _logger, ThunderDB _thunderDB, IConfiguration _configuration)
         {
             logger = _logger;
             thunderDB = _thunderDB;
+            configuration = _configuration;
         }
 
         public async Task<IActionResult> Index()
@@ -41,7 +45,7 @@ namespace Thunder.Controllers
                 CityResponseSync cityResponseSync = new CityResponseSync();
                 using (HttpClient httpClient = new HttpClient())
                 {
-                    using (HttpResponseMessage response = await httpClient.GetAsync("https://satudata.jabarprov.go.id/api-backend/bigdata/bps/od_indeks_pendidikan?limit=10000"))
+                    using (HttpResponseMessage response = await httpClient.GetAsync(configuration.GetValue<string>("ApiUrls:SyncCity")))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         cityResponseSync = JsonConvert.DeserializeObject<CityResponseSync>(apiResponse);
