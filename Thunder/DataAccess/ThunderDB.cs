@@ -23,6 +23,7 @@ namespace Thunder.DataAccess
         public DbSet<City> City { set; get; }   
         public DbSet<Facility> Facility { set; get; }
         public DbSet<UniversityFacility> UniversityFacility { set; get; }
+        public DbSet<Accreditation> Accreditation { set; get; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder)
         {
@@ -44,12 +45,6 @@ namespace Thunder.DataAccess
                 .HasForeignKey(column => column.UniversityId);
             });
 
-            modelBuilder.Entity<City>(entity =>
-            {
-                entity.HasMany(column => column.Universities)
-                .WithOne(column => column.City)
-                .HasForeignKey(column => column.CityId);
-            });
 
         }
 
