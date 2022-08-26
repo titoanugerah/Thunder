@@ -45,7 +45,7 @@ namespace Thunder.DataAccess
                 .HasForeignKey(column => column.UniversityId);
             });
 
-
+            
         }
 
     }
