@@ -10,6 +10,10 @@ namespace Thunder.Models
         public string Name { get; set; }
         public double EducationIndexScore { set; get; }
         public List<University> Universities { set; get; }
+        [NotMapped]
+        public double Total { set; get; }
+        [NotMapped]
+        public double Priority { set; get; }
 
     }
 }

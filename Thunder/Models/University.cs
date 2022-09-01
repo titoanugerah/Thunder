@@ -24,7 +24,10 @@ namespace Thunder.Models
         public string MapsUrl { set; get; }
         public string CuriculumFile { set; get; }
         public List<UniversityFacility> UniversityFacilities { set; get; }
-        public string Logo { set; get; }
+        [DefaultValue("")]
+        public string? Logo { set; get; }
+        [NotMapped]
+        public double Total { set; get; }
 
     }
 }

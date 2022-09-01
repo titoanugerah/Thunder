@@ -74,6 +74,18 @@
 							</select>
 						</div>                    
 					</div>
+
+					<div class="form-group">
+						<label>Prioritas</label>
+						<div class="select2-input">
+							<select id="priority" name="priorities[]" class="form-control multi" multiple="multiple" style="width:220px;">
+								<option value="City">Lokasi Kampus</option>								
+								<option value="Accreditation">Akreditasi</option>								
+								<option value="Facility">Fasilitas</option>								
+								<option value="Price">Harga</option>								
+							</select>
+						</div>                    
+					</div>
 					<div class="form-group">
 						<label>Maksimal SPP / Semester</label>
 						<input id="maxTuitionFee" value="0" type="number" class="form-control"  />
@@ -99,25 +111,32 @@
 	});
 
 	function Find(){
-		$.ajax({
-            type: "POST",
-            dataType: "JSON",
-            contentType: "application/x-www-form-urlencoded",
-            url: "finder/find",
-            data : {
-                Cities : JSON.stringify( $('#cities').val()),
-                Facilities : JSON.stringify( $('#facilities').val()),
-                Accreditation : JSON.stringify( $('#acreditation').val()),
-				TuitionFee : $("#maxTuitionFee").val()
-            },
-            success: function (result) {
-				notify("Berhasil", "pengguna berhasil di update", "success");
-            },
-            error: function (result) {
-                console.log(result);
-				notify("Gagal", "pengguna gagal di update" + result.responseText, "danger");
-            }
-        });
+		if($('#priority').val().length == 4) {
+			$.ajax({
+				type: "POST",
+				dataType: "JSON",
+				contentType: "application/x-www-form-urlencoded",
+				url: "finder/find",
+				data : {
+					Cities : JSON.stringify( $('#cities').val()),
+					Facilities : JSON.stringify( $('#facilities').val()),
+					Accreditation : JSON.stringify( $('#acreditation').val()),
+					Priorities : JSON.stringify( $('#priority').val()),
+					TuitionFee : $("#maxTuitionFee").val()
+				},
+				success: function (result) {
+					notify("Berhasil", "Berhasil", "success");
+
+				},
+				error: function (result) {
+					console.log(result);
+					notify("Gagal", "Gagal mencarikan universitas " + result.responseText, "danger");
+				}
+			});
+		}
+		else {
+			notify("Gagal", "Prioritas harus dipilih", "danger");
+		}
 
 	}
 	

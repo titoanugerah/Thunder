@@ -339,6 +339,7 @@
     }
 
     function getBase64Img(target)  {
+        console.log(target);
         var file = document.querySelector('input[type=file]')['files'][0];
         var reader = new FileReader();
         var baseString;
