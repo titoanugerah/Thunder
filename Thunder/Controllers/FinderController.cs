@@ -90,7 +90,7 @@ namespace Thunder.Controllers
                         else
                         {
                             PriorityRank priorityRank = priorityRanks.Where(x => x.Priority1 == priority2 && x.Priority2 == priority1).First();
-                            priorityRanks.Add(new PriorityRank(no, priority1, priority2, 1 / priorityRank.Score, $"1 / {priorityRank.Score}"));
+                            priorityRanks.Add(new PriorityRank(no, priority1, priority2, Math.Round((1 / priorityRank.Score), 2, MidpointRounding.AwayFromZero), $"1 / {priorityRank.Score}"));
                             no++;
                         }
                     }
@@ -108,7 +108,7 @@ namespace Thunder.Controllers
                 double totalNormalizationScore = 0;
                 foreach (PriorityRank priorityRank in priorityRanks)
                 {
-                    priorityRank.NormalizationScore = priorityRank.Score / priorityRank.Priority2.SumPairWise;
+                    priorityRank.NormalizationScore = Math.Round(priorityRank.Score / priorityRank.Priority2.SumPairWise, 2, MidpointRounding.AwayFromZero);
                     priorityRank.NormalizationScoreString = $"{priorityRank.Score} / {priorityRank.Priority2.SumPairWise}";
                     totalNormalizationScore = totalNormalizationScore + priorityRank.NormalizationScore;
                 }
@@ -119,7 +119,7 @@ namespace Thunder.Controllers
                     {
                         priority.Weight = (priority.Weight + priorityRank.NormalizationScore);
                     }
-                    priority.Weight = (priority.Weight / totalNormalizationScore);
+                    priority.Weight = Math.Round(priority.Weight / totalNormalizationScore, 2, MidpointRounding.AwayFromZero);
 
                 }
 
@@ -130,7 +130,7 @@ namespace Thunder.Controllers
                     .ToList();
                 double maxEducationIndexScore = cities.Select(p => p.EducationIndexScore).DefaultIfEmpty(0).Max();
                 double minEducationIndexScore = cities.Select(p => p.EducationIndexScore).DefaultIfEmpty(0).Min();
-                double scoreIndex = (maxEducationIndexScore - minEducationIndexScore) / 9;
+                double scoreIndex = Math.Round((maxEducationIndexScore - minEducationIndexScore)/9, 0, MidpointRounding.AwayFromZero);
 
                 List<CityRank> cityRanks = new List<CityRank>();
                 int id = 1;
@@ -140,9 +140,9 @@ namespace Thunder.Controllers
                     {
                         if (city1 != city2)
                         {
-                            if (city1.EducationIndexScore > city2.EducationIndexScore)
+                            if (city1.EducationIndexScore >= city2.EducationIndexScore)
                             {
-                                cityRanks.Add(new CityRank(id, city1, city2, Convert.ToInt32((city1.EducationIndexScore - city2.EducationIndexScore) / scoreIndex)));
+                                cityRanks.Add(new CityRank(id, city1, city2, Convert.ToInt32(Math.Round((city1.EducationIndexScore - city2.EducationIndexScore), 0, MidpointRounding.AwayFromZero) / scoreIndex)+1));
                                 id++;
                             }
                         }
@@ -172,7 +172,7 @@ namespace Thunder.Controllers
 
                 foreach (City city in cities)
                 {
-                    city.Total = cityRanks.Where(t => t.City1 == city).Sum(i => i.Score);
+                    city.Total = Math.Round(cityRanks.Where(t => t.City1 == city).Sum(i => i.Score)/cityRanks.Sum(x => x.Score),2, MidpointRounding.AwayFromZero);
                 }
 
                 //RankAccreditation
@@ -216,7 +216,7 @@ namespace Thunder.Controllers
 
                 foreach (Accreditation accreditation in accreditations)
                 {
-                    accreditation.Total = accreditationRanks.Where(t => t.HomeAccreditation == accreditation).Sum(i => i.Score);
+                    accreditation.Total = accreditationRanks.Where(t => t.HomeAccreditation == accreditation).Sum(i => i.Score)/ accreditationRanks.Sum(i => i.Score);
                 }
 
 
