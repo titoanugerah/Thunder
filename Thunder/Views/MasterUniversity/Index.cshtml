@@ -102,6 +102,7 @@
             <div class="spinner-border spinner-border-sm"></div>
             Simpan
         </button>
+        <button type="button" onclick="Delete()" data-dismiss="modal" class="btn btn-danger">Hapus</button>
         <button type="button" data-dismiss="modal" class="btn btn-secondary">Kembali</button>
     </div>
 </div>
@@ -256,6 +257,26 @@
 				notify("Gagal", "Data gagal di ambil" + result.responseText, "danger");
             }
         });
+    }
+
+    function Delete(){
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            contentType: "application/x-www-form-urlencoded",
+            url: "masteruniversity/delete",
+            data : {
+                Id : $('#idEdit').val()
+            },
+            success: function (result) {
+				notify("Berhasil", "data berhasil di update", "success");
+            },
+            error: function (result) {
+                console.log(result);
+				notify("Gagal", "pengguna gagal di update" + result.responseText, "danger");
+            }
+        });
+
     }
 
     function UpdateFacility(id){
