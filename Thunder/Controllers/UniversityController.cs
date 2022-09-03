@@ -18,7 +18,6 @@ namespace Thunder.Controllers
         {
             try
             {
-                ViewBag.Cities = thunderDB.City.ToList();
                 return View();
             }
             catch (Exception error)
