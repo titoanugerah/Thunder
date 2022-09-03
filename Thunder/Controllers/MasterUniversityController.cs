@@ -53,26 +53,6 @@ namespace Thunder.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Recovery(int Id)
-        {
-            try
-            {
-                University university = await thunderDB.University
-                    .Where(column => column.Id == Id)
-                    .FirstOrDefaultAsync();
-                university.IsExist = 1;
-                thunderDB.Entry(university).State = EntityState.Modified;
-                thunderDB.University.Update(university);
-                await thunderDB.SaveChangesAsync();
-                return new JsonResult(Ok());
-            }
-            catch (Exception error)
-            {
-                logger.LogError(error, $"Master University Constroller - Delete {Id}");
-                return BadRequest(error.InnerException.Message);
-            }
-        }
 
         [HttpGet]
         public async Task<IActionResult> Get(string keyword)
