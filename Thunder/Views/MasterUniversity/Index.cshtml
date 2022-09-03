@@ -103,7 +103,6 @@
             Simpan
         </button>
         <button type="button" id="btnDelete" onclick="Delete()" data-dismiss="modal" class="btn btn-danger">Hapus</button>
-        <button type="button" id="btnRecovery" onclick="Recovery()" data-dismiss="modal" class="btn btn-danger">Pulihkan</button>
         <button type="button" data-dismiss="modal" class="btn btn-secondary">Kembali</button>
     </div>
 </div>
@@ -238,14 +237,6 @@
                 $('#accreditationEdit').val(result.university.accreditation).change();
                 $('#imgPreviewEdit').attr('src',result.university.logo);
                 $('#imgstringEdit').val(result.university.logo);
-                if(result.university.isExist == 0){
-                    $('#btnDelete').attr("hidden", true);
-                    $('#btnRecovery').attr("hidden", false);
-                } 
-                else {
-                    $('#btnDelete').attr("hidden", false);
-                    $('#btnRecovery').attr("hidden", true);
-                }
                 var htmlFacility = "";
 
                 result.universityFacility.forEach(function(data){
@@ -279,27 +270,6 @@
             },
             success: function (result) {
 				notify("Berhasil", "universitas berhasil di hapus", "success");
-                Get();
-            },
-            error: function (result) {
-                console.log(result);
-				notify("Gagal", "universitas gagal di update" + result.responseText, "danger");
-            }
-        });
-
-    }
-
-        function Recovery(){
-        $.ajax({
-            type: "POST",
-            dataType: "JSON",
-            contentType: "application/x-www-form-urlencoded",
-            url: "masteruniversity/recovery",
-            data : {
-                Id : $('#idEdit').val()
-            },
-            success: function (result) {
-				notify("Berhasil", "Universitas berhasil di pulihkan", "success");
                 Get();
             },
             error: function (result) {
