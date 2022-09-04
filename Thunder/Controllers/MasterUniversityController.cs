@@ -21,6 +21,8 @@ namespace Thunder.Controllers
         {
             try
             {
+                ViewBag.Accreditations = await thunderDB.Accreditation
+                    .ToListAsync();
                 ViewBag.Cities = await thunderDB.City
                     .OrderBy(column => column.Name)
                     .ToListAsync();
@@ -71,7 +73,7 @@ namespace Thunder.Controllers
                 university.TuitionFee = updatedUniversity.TuitionFee;
                 university.Logo = updatedUniversity.Logo;
                 university.MapsUrl = updatedUniversity.MapsUrl;
-                university.Accreditation = updatedUniversity.Accreditation;
+                university.AccreditationId = updatedUniversity.AccreditationId;
                 university.Address = updatedUniversity.Address;
                 university.CityId = updatedUniversity.CityId;
                 university.Description = updatedUniversity.Description;
@@ -95,7 +97,6 @@ namespace Thunder.Controllers
             try
             {
                 university.CreatedDate = DateTime.Now;
-                university.CuriculumFile = "";
                 thunderDB.Entry(university).State = EntityState.Added;
                 await thunderDB.University.AddAsync(university);
                 await thunderDB.SaveChangesAsync();
@@ -130,6 +131,7 @@ namespace Thunder.Controllers
             {
                 DetailUniversity detailUniversity = new DetailUniversity();
                 detailUniversity.University = await thunderDB.University
+                    .Include(table => table.Accreditation)
                     .Where(column => column.Id == id)
                     .FirstOrDefaultAsync();
                 detailUniversity.UniversityFacility = await thunderDB.UniversityFacility

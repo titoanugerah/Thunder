@@ -176,10 +176,10 @@ namespace Thunder.Controllers
                 }
 
                 //RankAccreditation
-                List<string> accreditationInUniv = thunderDB.University.Select(x => x.Accreditation).Distinct().ToList();
+                List<University> accreditationInUniv = thunderDB.University.Include(table => table.Accreditation).ToList();
 
                 List<Accreditation> accreditations = thunderDB.Accreditation
-                    .Where(x => accreditationInUniv.Contains(x.Name))
+                    //.Where(x => accreditationInUniv.Contains(x.Name))
                     .ToList();
 
                 List<AccreditationRank> accreditationRanks = new List<AccreditationRank>();
@@ -265,7 +265,7 @@ namespace Thunder.Controllers
                 foreach (University university in universities)
                 {
 
-                    finalResults.Add(new FinalResult(no, university, university.City.Total, university.UniversityFacilities.Count(), accreditations.Where(x => x.Name == university.Accreditation).FirstOrDefault().Total, priorities));
+                    finalResults.Add(new FinalResult(no, university, university.City.Total, university.UniversityFacilities.Count(), accreditations.Where(x => x.Name == university.Accreditation.Name).FirstOrDefault().Total, priorities));
                 }
 
                 return new JsonResult(finalResults);
