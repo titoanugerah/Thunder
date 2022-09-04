@@ -28,5 +28,13 @@ namespace Thunder.Models
         //public string Accreditation { get;set; }
         public int AccreditationId { get; set; }
 
+        [NotMapped]
+        public double ScoreAccreditation { set; get; }
+
+        [NotMapped]
+        public double ScoreCity { set; get; }
+        [NotMapped]
+        public double ScoreFacility { set; get; }
+
     }
 }

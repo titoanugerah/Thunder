@@ -4,17 +4,17 @@ namespace Thunder.ViewModel
 {
     public class AccreditationRank
     {
-        public AccreditationRank(int id, Accreditation homeAccreditation, Accreditation awayAccreditation, double score)
+        public AccreditationRank(int id, University university1, University university2, double score)
         {
             Id = id;
-            HomeAccreditation = homeAccreditation;
-            AwayAccreditation = awayAccreditation;
+            University1 = university1;
+            University2 = university2;
             Score = score;
         }
 
         public int Id { set; get; }
-        public Accreditation HomeAccreditation { set; get; }
-        public Accreditation AwayAccreditation { set; get; }
+        public University University1 { set; get; }
+        public University University2 { set; get; }
         public double Score { set; get; }
     }
 }

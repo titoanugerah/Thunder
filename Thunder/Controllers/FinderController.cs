@@ -60,6 +60,13 @@ namespace Thunder.Controllers
 
                 List<PriorityRank> priorityRanks = new List<PriorityRank>();
 
+                List<University> universities = thunderDB.University
+                    .Include(x => x.UniversityFacilities)
+                    .Include(x => x.Accreditation)
+                    .Include(x => x.City)
+                    .ToList();
+
+
                 no = 1;
                 //Add value with bigger value
                 foreach (Priority priority1 in priorities)
@@ -124,140 +131,144 @@ namespace Thunder.Controllers
                 }
 
                 //List City
-                List<City> cities = thunderDB.University
-                    .Include(table => table.City)
-                    .Select(column => column.City)
-                    .ToList();
-                double maxEducationIndexScore = cities.Select(p => p.EducationIndexScore).DefaultIfEmpty(0).Max();
-                double minEducationIndexScore = cities.Select(p => p.EducationIndexScore).DefaultIfEmpty(0).Min();
+                double maxEducationIndexScore = universities.Select(p => p.City.EducationIndexScore).DefaultIfEmpty(0).Max();
+                double minEducationIndexScore = universities.Select(p => p.City.EducationIndexScore).DefaultIfEmpty(0).Min();
                 double scoreIndex = Math.Round((maxEducationIndexScore - minEducationIndexScore)/9, 0, MidpointRounding.AwayFromZero);
 
                 List<CityRank> cityRanks = new List<CityRank>();
                 int id = 1;
-                foreach (City city1 in cities)
+                foreach (University university1 in universities)
                 {
-                    foreach (City city2 in cities)
+                    foreach (University university2 in universities)
                     {
-                        if (city1 != city2)
+                        if (university1 != university2)
                         {
-                            if (city1.EducationIndexScore >= city2.EducationIndexScore)
+                            if (university1.City.EducationIndexScore >= university2.City.EducationIndexScore)
                             {
-                                cityRanks.Add(new CityRank(id, city1, city2, Convert.ToInt32(Math.Round((city1.EducationIndexScore - city2.EducationIndexScore), 0, MidpointRounding.AwayFromZero) / scoreIndex)+1));
+                                cityRanks.Add(new CityRank(id, university1, university2, Convert.ToInt32(Math.Round((university1.City.EducationIndexScore - university2.City.EducationIndexScore), 0, MidpointRounding.ToPositiveInfinity) / scoreIndex)+1));
                                 id++;
                             }
                         }
                         else
                         {
-                            cityRanks.Add(new CityRank(id, city1, city2, 1));
+                            cityRanks.Add(new CityRank(id, university1, university2, 1));
                             id++;
                         }
                     }
                 }
 
-                foreach (City city1 in cities)
+                foreach (University university1 in universities)
                 {
-                    foreach (City city2 in cities)
+                    foreach (University university2 in universities)
                     {
-                        if (cityRanks.Where(x => x.City1 == city1 && x.City2 == city2).Any())
+                        if (cityRanks.Where(x => x.University1.City == university1.City && x.University2.City == university2.City).Any())
                         {
                             continue;
                         } 
-                        else if (city1 != city2)
+                        else if (university1 != university2)
                         {
-                            cityRanks.Add(new CityRank(id, city1, city2, 1/ cityRanks.Where(x => x.City1 == city2 && x.City2 == city1).First().Score ));
+                            cityRanks.Add(new CityRank(id, university1, university2, 1/ cityRanks.Where(x => x.University1.City == university2.City && x.University2.City == university1.City).First().Score ));
                             id++;
                         }
                     }
                 }
 
-                foreach (City city in cities)
+                foreach (University university in universities)
                 {
-                    city.Total = Math.Round(cityRanks.Where(t => t.City1 == city).Sum(i => i.Score)/cityRanks.Sum(x => x.Score),2, MidpointRounding.AwayFromZero);
+                    university.ScoreCity = Math.Round(cityRanks.Where(t => t.University1.City == university.City).Sum(i => i.Score)/cityRanks.Sum(x => x.Score),2, MidpointRounding.AwayFromZero);
                 }
 
                 //RankAccreditation
-                List<University> accreditationInUniv = thunderDB.University.Include(table => table.Accreditation).ToList();
+                double maxAccreditationScore = universities.Select(p => p.Accreditation.Score).DefaultIfEmpty(0).Max();
+                double minAccreditationScore = universities.Select(p => p.Accreditation.Score).DefaultIfEmpty(0).Min();
+                scoreIndex = Math.Round((maxAccreditationScore - minAccreditationScore) / 9, 0, MidpointRounding.AwayFromZero);
 
-                List<Accreditation> accreditations = thunderDB.Accreditation
-                    //.Where(x => accreditationInUniv.Contains(x.Name))
-                    .ToList();
+                //List<University> accreditations = thunderDB.University
+                //    .Include(table => table.Accreditation)
+                //    //.Where(x => accreditationInUniv.Contains(x.Name))
+                //    .ToList();
 
                 List<AccreditationRank> accreditationRanks = new List<AccreditationRank>();
                 id = 0;
-                foreach (Accreditation accreditation1 in accreditations)
+                foreach (University university1 in universities)
                 {
-                    foreach (Accreditation accreditation2 in accreditations)
+                    foreach (University university2 in universities)
                     {
-                        if (accreditation1 != accreditation2 && accreditation1.Score > accreditation2.Score)
+                        if (university1 != university2 && university1.Accreditation.Score > university2.Accreditation.Score)
                         {
-                            accreditationRanks.Add(new AccreditationRank(id++, accreditation1, accreditation2, 9 - ((accreditation1.Score - accreditation2.Score)/9)));
+                            accreditationRanks.Add(new AccreditationRank(id++, university1, university2, Math.Round(((Convert.ToDouble(university1.Accreditation.Score) / Convert.ToDouble(university2.Accreditation.Score)) / scoreIndex) * 10, 0, MidpointRounding.ToPositiveInfinity)));
                         }
-                        else
+                        else if (university1 == university2 || university1.Accreditation.Score == university2.Accreditation.Score)
                         {
-                            accreditationRanks.Add(new AccreditationRank(id++, accreditation1, accreditation2, 1));
+                            accreditationRanks.Add(new AccreditationRank(id++, university1, university2, 1));
                         }
                     }
                 }
 
-                foreach (Accreditation accreditation1 in accreditations)
+                foreach (University university1 in universities)
                 {
-                    foreach (Accreditation accreditation2 in accreditations)
+                    foreach (University university2 in universities)
                     {
-                        if (accreditationRanks.Where(x => x.HomeAccreditation == accreditation1 && x.AwayAccreditation == accreditation2).Any())
+                        if (accreditationRanks.Where(x => x.University1 == university1 && x.University2 == university2).Any())
                         {
                             continue;
                         }
                         else
                         {
-                            accreditationRanks.Add(new AccreditationRank(id++, accreditation1, accreditation2, (double)(1 / (accreditationRanks.Where(x => x.HomeAccreditation == accreditation2 && x.AwayAccreditation == accreditation1).FirstOrDefault().Score))));
+                            accreditationRanks.Add(new AccreditationRank(id++, university1, university2, (double)(1 / (accreditationRanks.Where(x => x.University1 == university2 && x.University2 == university1).FirstOrDefault().Score))));
                         }
                     }
                 }
 
-                foreach (Accreditation accreditation in accreditations)
+                //RankAccreditation
+                double maxFacilityScore = universities.Select(p => p.UniversityFacilities.Count()).DefaultIfEmpty(0).Max();
+                double minFacilityScore = universities.Select(p => p.UniversityFacilities.Count()).DefaultIfEmpty(0).Min();
+                scoreIndex = Math.Round(((maxAccreditationScore - minAccreditationScore) / 9) + 0.1, 0, MidpointRounding.AwayFromZero);
+
+
+                foreach (University university in universities)
                 {
-                    accreditation.Total = accreditationRanks.Where(t => t.HomeAccreditation == accreditation).Sum(i => i.Score)/ accreditationRanks.Sum(i => i.Score);
+                    university.ScoreAccreditation = Math.Round(accreditationRanks.Where(t => t.University1 == university).Sum(i => i.Score)/ accreditationRanks.Sum(i => i.Score), 2, MidpointRounding.AwayFromZero);
                 }
 
 
                 id = 1;
-                //List<FacilityRank> facilityRanks = new List<FacilityRank>();
-                ////FacilityRank
-                List<University> universities = thunderDB.University.Include(x => x.UniversityFacilities).Include(x => x.City).ToList();
-                //foreach (University university1 in universities)
-                //{
-                //    foreach (University university2 in universities)
-                //    {
-                //        if (university1 != university2 && university1.UniversityFacilities.Count() > university2.UniversityFacilities.Count())
-                //        {
-                //            facilityRanks.Add(new FacilityRank(id++, university1, university1.UniversityFacilities.Count(), university2, university2.UniversityFacilities.Count(), (university1.UniversityFacilities.Count() - university2.UniversityFacilities.Count()) ^ 9));
-                //        }
-                //        else if (university1 == university2)
-                //        {
-                //            facilityRanks.Add(new FacilityRank(id++, university1, university1.UniversityFacilities.Count(), university2, university2.UniversityFacilities.Count(), 1));
-                //        }
-                //    }
-                //}
+                List<FacilityRank> facilityRanks = new List<FacilityRank>();
+                id = 0;
+                foreach (University university1 in universities)
+                {
+                    foreach (University university2 in universities)
+                    {
+                        if (university1 != university2 && university1.UniversityFacilities.Count() > university2.UniversityFacilities.Count())
+                        {
+                            facilityRanks.Add(new FacilityRank(id++, university1, university2, Math.Round(((Convert.ToDouble(university1.Accreditation.Score) / Convert.ToDouble(university2.Accreditation.Score)) / scoreIndex), 0, MidpointRounding.ToPositiveInfinity)));
+                        }
+                        else if (university1 == university2 || university1.UniversityFacilities.Count() == university2.UniversityFacilities.Count())
+                        {
+                            facilityRanks.Add(new FacilityRank(id++, university1, university2, 1));
+                        }
+                    }
+                }
 
-                //foreach (University university1 in universities)
-                //{
-                //    foreach (University university2 in universities)
-                //    {
-                //        if (facilityRanks.Where(x => x.University1 == university1 && x.University2 == university2).Any())
-                //        {
-                //            continue;
-                //        }
-                //        else
-                //        {
-                //            facilityRanks.Add(new FacilityRank(id, university1, university1.UniversityFacilities.Count(), university2, university2.UniversityFacilities.Count(), 1 / facilityRanks.Where(x => x.University1 == university2 & x.University2 == university1).First().Score));
-                //        }
-                //    }
-                //}
+                foreach (University university1 in universities)
+                {
+                    foreach (University university2 in universities)
+                    {
+                        if (facilityRanks.Where(x => x.University1 == university1 && x.University2 == university2).Any())
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            facilityRanks.Add(new FacilityRank(id++, university1, university2, (double)(1 / (accreditationRanks.Where(x => x.University1 == university2 && x.University2 == university1).FirstOrDefault().Score))));
+                        }
+                    }
+                }
 
-                //foreach (University university in universities)
-                //{
-                //    university.Total = facilityRanks.Where(t => t.University1 == university).Sum(i => i.Score);
-                //}
+                foreach (University university in universities)
+                {
+                    university.ScoreFacility = Math.Round(facilityRanks.Where(t => t.University1 == university).Sum(i => i.Score) / facilityRanks.Sum(i => i.Score), 2, MidpointRounding.AwayFromZero);
+                }
 
 
                 List<FinalResult> finalResults = new List<FinalResult>();
@@ -265,7 +276,7 @@ namespace Thunder.Controllers
                 foreach (University university in universities)
                 {
 
-                    finalResults.Add(new FinalResult(no, university, university.City.Total, university.UniversityFacilities.Count(), accreditations.Where(x => x.Name == university.Accreditation.Name).FirstOrDefault().Total, priorities));
+                    finalResults.Add(new FinalResult(no, university, university.City.Total, university.UniversityFacilities.Count(), universities.Where(x => x == university).FirstOrDefault().ScoreAccreditation, priorities));
                 }
 
                 return new JsonResult(finalResults);
