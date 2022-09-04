@@ -1,53 +1,91 @@
-﻿<li class="nav-section">
-	<span class="sidebar-mini-icon">
-		<i class="fa fa-ellipsis-h"></i>
-	</span>
-	<h4 class="text-section">Menu Admin</h4>
-</li>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@functions{
+	private bool IsAuthenticated()
+	{
+		return User.Claims.Any();
+	}
+
+	public string GetUserClaim(string type)
+	{
+		return User.Claims.Where(x => x.Type == type).Select(x => x.Value).FirstOrDefault();
+	}
+
+	public string GetImage()
+	{
+		if (IsAuthenticated())
+		{
+			return GetUserClaim("Image");
+		}
+		else
+		{
+				return $"img/profile.jpg";
+		}
+	}	
+}
 
 
-<li class="nav-item active">
-	<a data-toggle="collapse" href="#masterSetting" class="collapsed" aria-expanded="false">
-		<i class="fas fa-cog"></i>
-		<p>Pengaturan</p>
-		<span class="caret"></span>
-	</a>
-	<div class="collapse" id="masterSetting">
-		<ul class="nav nav-collapse">
-			<li>
-				<a asp-controller="MasterUser" asp-action="Index">
-					<span class="sub-item">Pengguna</span>
-				</a>
-			</li>									
-			<li>
-				<a asp-controller="MasterAbout" asp-action="Index">
-					<span class="sub-item">Tentang</span>
-				</a>
-			</li>									
-			<li>
-				<a asp-controller="MasterUniversity" asp-action="Index">
-					<span class="sub-item">Universitas</span>
-				</a>
-			</li>		
-			<li>
-				<a asp-controller="MasterFacility" asp-action="Index">
-					<span class="sub-item">Fasilitas</span>
-				</a>
-			</li>	
-			<li>
-				<a asp-controller="MasterCity" asp-action="Index">
-					<span class="sub-item">Kota</span>
-				</a>
-			</li>	
-		</ul>
-	</div>
-</li>
+@if (GetUserClaim("Role") == "Admin")
+{
+	<li class="nav-section">
+		<span class="sidebar-mini-icon">
+			<i class="fa fa-ellipsis-h"></i>
+		</span>
+		<h4 class="text-section">Menu Admin</h4>
+	</li>
+
+	<li class="nav-item active">
+		<a data-toggle="collapse" href="#masterSetting" class="collapsed" aria-expanded="false">
+			<i class="fas fa-cog"></i>
+			<p>Pengaturan</p>
+			<span class="caret"></span>
+		</a>
+		<div class="collapse" id="masterSetting">
+			<ul class="nav nav-collapse">
+				<li>
+					<a asp-controller="MasterUser" asp-action="Index">
+						<span class="sub-item">Pengguna</span>
+					</a>
+				</li>									
+				<li>
+					<a asp-controller="MasterAbout" asp-action="Index">
+						<span class="sub-item">Tentang</span>
+					</a>
+				</li>									
+				<li>
+					<a asp-controller="MasterUniversity" asp-action="Index">
+						<span class="sub-item">Universitas</span>
+					</a>
+				</li>		
+				<li>
+					<a asp-controller="MasterFacility" asp-action="Index">
+						<span class="sub-item">Fasilitas</span>
+					</a>
+				</li>	
+				<li>
+					<a asp-controller="MasterCity" asp-action="Index">
+						<span class="sub-item">Kota</span>
+					</a>
+				</li>	
+			</ul>
+		</div>
+	</li>
+	
+}
+
 <li class="nav-section">
 	<span class="sidebar-mini-icon">
 		<i class="fa fa-ellipsis-h"></i>
 	</span>
-	<h4 class="text-section">Lain Lain</h4>
+	<h4 class="text-section">Menu Utama</h4>
 </li>
+
+<li class="nav-item active">
+	<a asp-controller="University" asp-action="Index">
+		<i class="fas fa-child"></i>
+		<p>Universitas</p>
+	</a>
+</li>	
 
 <li class="nav-item active">
 	<a asp-controller="About" asp-action="Index">

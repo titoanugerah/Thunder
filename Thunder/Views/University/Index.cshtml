@@ -1,0 +1,97 @@
+﻿<div class="panel-header bg-primary-gradient">
+	<div class="page-inner py-5">
+		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+			<div>
+				<h2 class="text-white pb-2 fw-bold">Pengelola Universitas</h2>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="page-inner mt--5">
+	<div class="row mt--2 row" id="content">
+
+	</div>
+</div>
+
+
+</div>
+
+</div>
+
+
+<script>
+    $( document ).ready(function(){
+        Get();
+    });
+
+    $('#keyword').on('change', function(){
+        Get();
+    });
+
+    function Get(){
+        $.ajax({
+            type: "GET",
+            dataType: "JSON",
+            contentType: "application/x-www-form-urlencoded",
+            url: "masterUniversity/get",
+            data:{
+                keyword : $('#keyword').val()
+            },
+            success: function (result) {
+                var htmlCard= "";
+                    var status = "";
+                result.forEach(function(university){
+                    htmlCard = htmlCard + '<div class="col-sm-6 col-md-4"><div class="card card-stats card-info card-round" onclick="Detail(' + university.id + ')"><div class="card-body"><div class="row"><div class="col-12 col-stats"><div class="numbers"><p class="card-title">'+university.name+'</p></div></div></div></div></div></div>'
+                });
+                $('#content').html(htmlCard);
+            },
+            error: function (result) {
+                console.log(result);
+		        notify("Gagal", "Data gagal di ambil" + result.responseText, "danger");
+            }
+        });
+    }
+
+    function Detail(id){
+        window.open('University/Detail/'+id, '_blank');
+    //    $.ajax({
+    //        type: "GET",
+    //        dataType: "JSON",
+    //        contentType: "application/x-www-form-urlencoded",
+    //        url: "masteruniversity/detail/"+id,
+    //        success: function (result) {
+    //            $('#idEdit').val(result.university.id);
+    //            $('#nameEdit').val(result.university.name);
+    //            $('#descriptionEdit').val(result.university.description);
+    //            $('#addressEdit').val(result.university.address);
+    //            $('#cityIdEdit').val(result.university.cityId).change();
+    //            $('#mapsUrlEdit').val(result.university.mapsUrl);
+    //            $('#tuitionFeeEdit').val(result.university.tuitionFee);
+    //            $('#accreditationEdit').val(result.university.accreditation).change();
+    //            $('#imgPreviewEdit').attr('src',result.university.logo);
+    //            $('#imgstringEdit').val(result.university.logo);
+    //            var htmlFacility = "";
+
+    //            result.universityFacility.forEach(function(data){
+
+    //                if(data.value == 1){
+    //                    htmlFacility = htmlFacility + '<div class="form-group"><label>' + data.facility.name + '</label><select class="form-control" id="facility' + data.id + '" onchange=UpdateFacility(' + data.id + ')><option value="1" selected>Ada</option><option value="0">Tidak Ada</option></select></div>';
+    //                } else {
+    //                    htmlFacility = htmlFacility + '<div class="form-group"><label>' + data.facility.name + '</label><select class="form-control" id="facility' + data.id + '" onchange=UpdateFacility(' + data.id + ')><option value="1" >Ada</option><option value="0"selected>Tidak Ada</option></select></div>';
+    //                }
+    //            });
+
+    //            $('#facility').html(htmlFacility);
+                
+    //            $('#detailUniversityModal').modal('show');
+    //        },
+    //        error: function (result) {
+    //            console.log(result);
+				//notify("Gagal", "Data gagal di ambil" + result.responseText, "danger");
+    //        }
+    //    });
+    }       
+
+
+</script>

@@ -35,6 +35,27 @@ namespace Thunder.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            try
+            {
+                University university = await thunderDB.University
+                    .Where(column => column.Id == Id)
+                    .FirstOrDefaultAsync();
+                thunderDB.Entry(university).State = EntityState.Deleted;
+                thunderDB.University.Remove(university);
+                await thunderDB.SaveChangesAsync();
+                return new JsonResult(Ok());
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, $"Master University Constroller - Delete {Id}");
+                return BadRequest(error.InnerException.Message);
+            }
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> Get(string keyword)
         {

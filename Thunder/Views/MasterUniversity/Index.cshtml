@@ -19,7 +19,7 @@
 </div>
 
 <div class="modal fade" id="detailUniversityModal" role="dialog">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <center>
@@ -102,6 +102,7 @@
             <div class="spinner-border spinner-border-sm"></div>
             Simpan
         </button>
+        <button type="button" id="btnDelete" onclick="Delete()" data-dismiss="modal" class="btn btn-danger">Hapus</button>
         <button type="button" data-dismiss="modal" class="btn btn-secondary">Kembali</button>
     </div>
 </div>
@@ -201,14 +202,7 @@
                 var htmlCard= "";
                     var status = "";
                 result.forEach(function(university){
-                    if (university.isExist == 1){
-                        status = "success";
-                    }
-                    else
-                    {
-                        status = "danger";
-                    }
-                    htmlCard = htmlCard + '<div class="col-sm-6 col-md-4"><div class="card card-stats card-' + status + ' card-round" onclick="Detail(' + university.id + ')"><div class="card-body"><div class="row"><div class="col-12 col-stats"><div class="numbers"><p class="card-title">'+university.name+'</p></div></div></div></div></div></div>'
+                    htmlCard = htmlCard + '<div class="col-sm-6 col-md-4"><div class="card card-stats card-info card-round" onclick="Detail(' + university.id + ')"><div class="card-body"><div class="row"><div class="col-12 col-stats"><div class="numbers"><p class="card-title">'+university.name+'</p></div></div></div></div></div></div>'
                 });
                 $('#content').html(htmlCard);
             },
@@ -258,6 +252,27 @@
         });
     }
 
+    function Delete(){
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            contentType: "application/x-www-form-urlencoded",
+            url: "masteruniversity/delete",
+            data : {
+                Id : $('#idEdit').val()
+            },
+            success: function (result) {
+				notify("Berhasil", "universitas berhasil di hapus", "success");
+                Get();
+            },
+            error: function (result) {
+                console.log(result);
+				notify("Gagal", "universitas gagal di update" + result.responseText, "danger");
+            }
+        });
+
+    }
+
     function UpdateFacility(id){
         $.ajax({
             type: "POST",
@@ -273,7 +288,7 @@
             },
             error: function (result) {
                 console.log(result);
-				notify("Gagal", "pengguna gagal di update" + result.responseText, "danger");
+				notify("Gagal", "universitas gagal di update" + result.responseText, "danger");
             }
         });
 
@@ -299,11 +314,11 @@
             success: function (result) {
                 $('#detailUniversityModal').modal('hide');
                 Get();
-				notify("Berhasil", "pengguna berhasil di update", "success");
+				notify("Berhasil", "universitas berhasil di update", "success");
             },
             error: function (result) {
                 console.log(result);
-				notify("Gagal", "pengguna gagal di update" + result.responseText, "danger");
+				notify("Gagal", "universitas gagal di update" + result.responseText, "danger");
             }
         });
 
@@ -329,11 +344,11 @@
             success: function (result) {
                 $('#addUniversityModal').modal('hide');
                 Get();
-				notify("Berhasil", "pengguna berhasil di update", "success");
+				notify("Berhasil", "universitas berhasil di update", "success");
             },
             error: function (result) {
                 console.log(result);
-				notify("Gagal", "pengguna gagal di update" + result.responseText, "danger");
+				notify("Gagal", "universitas gagal di update" + result.responseText, "danger");
             }
         });
     }
