@@ -149,10 +149,10 @@
                     <div class="form-group">
                         <label>Akreditasi</label>
                         <select class="form-control" id="accreditationAdd">
-                            <option value="A">A (Unggul)</option>  
-                            <option value="B">B (Baik Sekali)</option>  
-                            <option value="C">C (Baik)</option>  
-                            <option value="X">Tidak Ada</option>  
+                            @foreach (Accreditation accreditation in @ViewBag.Accreditations)
+                            {
+                                <option value="@accreditation.Id">@accreditation.Name</option>                                          
+                            }
                         </select>  
                     </div>
                     <div class="form-group">
@@ -227,7 +227,7 @@
                 $('#cityIdEdit').val(result.university.cityId).change();
                 $('#mapsUrlEdit').val(result.university.mapsUrl);
                 $('#tuitionFeeEdit').val(result.university.tuitionFee);
-                $('#accreditationEdit').val(result.university.accreditation.name).change();
+                $('#accreditationEdit').val(result.university.accreditation.id).change();
                 $('#imgPreviewEdit').attr('src',result.university.logo);
                 $('#imgstringEdit').val(result.university.logo);
                 var htmlFacility = "";
@@ -308,8 +308,9 @@
                 CityId : $('#cityIdEdit').val(),
                 MapsUrl : $('#mapsUrlEdit').val(),
                 TuitionFee : $('#tuitionFeeEdit').val(),
-                AccreditationId : $('#accreditationEdit').val(),
-                Logo : $('#imgstringEdit').val()
+                Logo : $('#imgstringEdit').val(),
+                AccreditationId : $("#accreditationEdit").val()
+
             },
             success: function (result) {
                 $('#detailUniversityModal').modal('hide');
@@ -334,7 +335,7 @@
                 Name : $('#nameAdd').val(),
                 Address : $('#addressAdd').val(),
                 Description : $('#descriptionAdd').val(),
-                Accreditation : $('#accreditationAdd').val(),
+                AccreditationId : $('#accreditationAdd').val(),
                 TuitionFee : $('#tuitionFeeAdd').val(),
                 CityId  : $('#cityIdAdd').val(),
                 MapsUrl   : $('#mapsUrlAdd').val(),    

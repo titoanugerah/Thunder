@@ -10,10 +10,7 @@ namespace Thunder.Models
         public int Id { get; set; } 
         [Required]
         public string Name { get; set; }
-        [DefaultValue("A")]
-        [MaxLength(1)]
-        //public string Accreditation { get;set; }
-        public int AccreditationId { get;set; }
+ 
         public Accreditation Accreditation { set; get; }
         public string Description { get; set; }
         [DefaultValue(0)]
@@ -27,6 +24,9 @@ namespace Thunder.Models
         public List<UniversityFacility> UniversityFacilities { set; get; }
         [DefaultValue("")]
         public string? Logo { set; get; }
+        //[MaxLength(1)]
+        //public string Accreditation { get;set; }
+        public int AccreditationId { get; set; }
 
     }
 }
