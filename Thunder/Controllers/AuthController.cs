@@ -70,19 +70,22 @@ namespace Thunder.Controllers
                     .Where(user => user.Email == GetClaims(claims, "emailaddress"))
                     .FirstOrDefault();
 
-                user.Name = GetClaims(claims, "name");
-                user.Email = GetClaims(claims, "emailaddress");
-                user.Image = GetClaims(claims, "picture");
                 if (user == null)
                 {
                     user.CreatedDate = DateTime.Now;
                     user.IsExist = 1;
                     user.RoleId = 1;
+                    user.Name = GetClaims(claims, "name");
+                    user.Email = GetClaims(claims, "emailaddress");
+                    user.Image = GetClaims(claims, "picture");
                     thunderDB.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Added;
                     await thunderDB.User.AddAsync(user);
                 }
                 else
                 {
+                    user.Name = GetClaims(claims, "name");
+                    user.Email = GetClaims(claims, "emailaddress");
+                    user.Image = GetClaims(claims, "picture");
                     thunderDB.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     thunderDB.User.Update(user);
                 }
