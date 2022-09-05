@@ -240,42 +240,7 @@
 	}
 
 	    function Detail(id){
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            contentType: "application/x-www-form-urlencoded",
-            url: "masteruniversity/detail/"+id,
-            success: function (result) {
-                $('#idEdit').val(result.university.id);
-                $('#nameEdit').val(result.university.name);
-                $('#descriptionEdit').val(result.university.description);
-                $('#addressEdit').val(result.university.address);
-                $('#cityIdEdit').val(result.university.cityId).change();
-                $('#mapsUrlEdit').val(result.university.mapsUrl);
-                $('#tuitionFeeEdit').val(result.university.tuitionFee);
-                $('#accreditationEdit').val(result.university.accreditation).change();
-                $('#imgPreviewEdit').attr('src',result.university.logo);
-                $('#imgstringEdit').val(result.university.logo);
-                var htmlFacility = "";
-
-                result.universityFacility.forEach(function(data){
-
-                    if(data.value == 1){
-                        htmlFacility = htmlFacility + '<div class="form-group"><label>' + data.facility.name + '</label><select class="form-control" id="facility' + data.id + '" onchange=UpdateFacility(' + data.id + ')><option value="1" selected>Ada</option><option value="0">Tidak Ada</option></select></div>';
-                    } else {
-                        htmlFacility = htmlFacility + '<div class="form-group"><label>' + data.facility.name + '</label><select class="form-control" id="facility' + data.id + '" onchange=UpdateFacility(' + data.id + ')><option value="1" >Ada</option><option value="0"selected>Tidak Ada</option></select></div>';
-                    }
-                });
-
-                $('#facility').html(htmlFacility);
-                
-                $('#detailUniversityModal').modal('show');
-            },
-            error: function (result) {
-                console.log(result);
-				notify("Gagal", "Data gagal di ambil" + result.responseText, "danger");
-            }
-        });
-    }
+			window.open('University/Detail/'+id, '_blank');
+	    }
 	
 </script>
