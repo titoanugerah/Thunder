@@ -35,6 +35,7 @@ namespace Thunder.Models
         public double ScoreCity { set; get; }
         [NotMapped]
         public double ScoreFacility { set; get; }
-
+        [NotMapped]
+        public double ScoreTuitionFee { set; get; }
     }
 }

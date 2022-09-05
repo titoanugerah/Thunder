@@ -221,29 +221,35 @@ namespace Thunder.Controllers
                 }
 
                 //RankAccreditation
-                double maxFacilityScore = universities.Select(p => p.UniversityFacilities.Count()).DefaultIfEmpty(0).Max();
-                double minFacilityScore = universities.Select(p => p.UniversityFacilities.Count()).DefaultIfEmpty(0).Min();
-                scoreIndex = Math.Round(((maxAccreditationScore - minAccreditationScore) / 9) + 0.1, 0, MidpointRounding.AwayFromZero);
-
-
+                //
                 foreach (University university in universities)
                 {
                     university.ScoreAccreditation = Math.Round(accreditationRanks.Where(t => t.University1 == university).Sum(i => i.Score)/ accreditationRanks.Sum(i => i.Score), 2, MidpointRounding.AwayFromZero);
                 }
 
+                List<UniversityFacilityTotal> universityFacilityTotals = new List<UniversityFacilityTotal>();
+                foreach (University university in universities)
+                {
+                    universityFacilityTotals.Add(new UniversityFacilityTotal(university, university.UniversityFacilities.Where(x => x.Value == 1).Count()));
+                }
 
-                id = 1;
+
+                double maxFacilityScore = universityFacilityTotals.Select(x => x.Total).Max();
+                double minFacilityScore = universityFacilityTotals.Select(x => x.Total).Min();
+                scoreIndex = Math.Round(((maxFacilityScore - minFacilityScore) / 9) + 0.1, 2, MidpointRounding.AwayFromZero);
+
                 List<FacilityRank> facilityRanks = new List<FacilityRank>();
-                id = 0;
+                id = 1;
+
                 foreach (University university1 in universities)
                 {
                     foreach (University university2 in universities)
                     {
-                        if (university1 != university2 && university1.UniversityFacilities.Count() > university2.UniversityFacilities.Count())
+                        if (university1 != university2 && university1.UniversityFacilities.Where(x => x.Value == 1).Count() > university2.UniversityFacilities.Where(x => x.Value == 1).Count())
                         {
-                            facilityRanks.Add(new FacilityRank(id++, university1, university2, Math.Round(((Convert.ToDouble(university1.Accreditation.Score) / Convert.ToDouble(university2.Accreditation.Score)) / scoreIndex), 0, MidpointRounding.ToPositiveInfinity)));
+                            facilityRanks.Add(new FacilityRank(id++, university1, university2, Math.Round((university1.UniversityFacilities.Where(x => x.Value == 1).Count() / university2.UniversityFacilities.Where(x => x.Value == 1).Count())/scoreIndex, 0, MidpointRounding.AwayFromZero)) );
                         }
-                        else if (university1 == university2 || university1.UniversityFacilities.Count() == university2.UniversityFacilities.Count())
+                        else if (university1 == university2 || university1.UniversityFacilities.Where(x => x.Value == 1).Count() == university2.UniversityFacilities.Where(x => x.Value == 1).Count())
                         {
                             facilityRanks.Add(new FacilityRank(id++, university1, university2, 1));
                         }
@@ -260,7 +266,7 @@ namespace Thunder.Controllers
                         }
                         else
                         {
-                            facilityRanks.Add(new FacilityRank(id++, university1, university2, (double)(1 / (accreditationRanks.Where(x => x.University1 == university2 && x.University2 == university1).FirstOrDefault().Score))));
+                            facilityRanks.Add(new FacilityRank(id++, university1, university2, (double)(1 / (facilityRanks.Where(x => x.University1 == university2 && x.University2 == university1).FirstOrDefault().Score))));
                         }
                     }
                 }
@@ -271,15 +277,91 @@ namespace Thunder.Controllers
                 }
 
 
+                double maxTuitionFee = universities.Select(x => x.TuitionFee).Max();
+                double minTuitionFee = universities.Select(x => x.TuitionFee).Min();
+                scoreIndex = Math.Round(((maxTuitionFee - minTuitionFee) / 9), 2, MidpointRounding.AwayFromZero);
+
+                id = 1;
+                List<TuitionFeeRank> tuitionFeeRanks = new List<TuitionFeeRank>();
+                foreach (University university1 in universities)
+                {
+                    foreach (University university2 in universities)
+                    {
+                        if (university1 != university2 && university1.TuitionFee > university2.TuitionFee)
+                        {
+                            tuitionFeeRanks.Add(new TuitionFeeRank(id++, university1, university2, Math.Round((university1.TuitionFee - university2.TuitionFee)/scoreIndex, 0, MidpointRounding.AwayFromZero)));
+                        }
+                        else if (university1 == university2 || university1.TuitionFee == university2.TuitionFee)
+                        {
+                            tuitionFeeRanks.Add(new TuitionFeeRank(id++, university1, university2, 1));
+                        }
+                    }
+                }
+
+                foreach (University university1 in universities)
+                {
+                    foreach (University university2 in universities)
+                    {
+                        if (tuitionFeeRanks.Where(x => x.University1 == university1 && x.University2 == university2).Any())
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            tuitionFeeRanks.Add(new TuitionFeeRank(id++, university1, university2, (double)(1 / (tuitionFeeRanks.Where(x => x.University1 == university2 && x.University2 == university1).FirstOrDefault().Score))));
+                        }
+                    }
+                }
+
+                foreach (University university in universities)
+                {
+                    university.ScoreTuitionFee = Math.Round(tuitionFeeRanks.Where(t => t.University1 == university).Sum(i => i.Score) / tuitionFeeRanks.Sum(i => i.Score), 2, MidpointRounding.AwayFromZero);
+                }
+
+
                 List<FinalResult> finalResults = new List<FinalResult>();
                 no = 1;
                 foreach (University university in universities)
                 {
 
-                    finalResults.Add(new FinalResult(no, university, university.City.Total, university.UniversityFacilities.Count(), universities.Where(x => x == university).FirstOrDefault().ScoreAccreditation, priorities));
+                    finalResults.Add(new FinalResult(no, university, university.ScoreCity, university.ScoreFacility, university.ScoreAccreditation, university.ScoreTuitionFee, priorities));
+                }
+                List<FinalResult> finalResults2 = new List<FinalResult>();
+                finalResults2 = finalResults;
+                if (inputAccreditations.Count() > 0)
+                {
+                    finalResults2 = finalResults2.Where(x => inputAccreditations.Contains(x.University.Accreditation.Name)).ToList();
+                }
+                if (inputCities.Count() > 0)
+                {
+                    finalResults2 = finalResults2.Where(x => inputCities.Contains(x.University.CityId.ToString())).ToList();
+                }
+                if (inputFacilities.Count() > 0)
+                {
+                    List<University> availableUniversity = thunderDB.UniversityFacility
+                        .Include(table => table.University)
+                        .Include(table => table.Facility)
+                        .Where(column => inputFacilities.Contains(column.FacilityId.ToString()))
+                        .Select(column => column.University)
+                        .Distinct()
+                        .ToList();
+
+                    finalResults2 = finalResults2.Where(x => availableUniversity.Contains(x.University)).ToList();
+                }
+                if (inputTuitionFee != 0)
+                {
+                    finalResults2 = finalResults2.Where(x => x.University.TuitionFee <= inputTuitionFee).ToList();
                 }
 
-                return new JsonResult(finalResults);
+
+                if (finalResults2.Any())
+                {
+                    return new JsonResult(finalResults2.OrderBy(x => x.ScoreTotal));
+                }
+                else
+                {
+                    return new JsonResult(finalResults.OrderBy(x => x.ScoreTotal));
+                }
             }
             catch (Exception error)
             {
