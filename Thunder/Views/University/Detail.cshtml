@@ -5,7 +5,6 @@
 				<h2 class="text-white pb-2 fw-bold">Pengelola Universitas</h2>
 			</div>
             <div class="ml-md-auto py-2 py-md-0">
-				<button data-toggle="modal" data-target="#addUniversityModal" class="btn btn-white btn-border btn-round mr-2">Tambah</button>
 			</div>
 
 		</div>
@@ -25,27 +24,27 @@
 				<div class="card-body row">
 					<div class="form-group col-md-3">
 						<label>Nama Perguruan Tinggi</label>
-						<input class="form-control" value="@ViewBag.University.Name"/>
+						<input class="form-control" value="@ViewBag.University.Name" readonly/>
 					</div>
 
 					<div class="form-group col-md-3">
 						<label>Akreditasi</label>
-						<input class="form-control" value="@ViewBag.University.Accreditation"/>
+						<input class="form-control" value="@ViewBag.University.Accreditation" readonly/>
 					</div>
 
 					<div class="form-group col-md-3">
 						<label>Kota</label>
-						<input class="form-control" value="@ViewBag.University.City.Name"/>
+						<input class="form-control" value="@ViewBag.University.City.Name" readonly/>
 					</div>
 
 					<div class="form-group col-md-3">
 						<label>SPP</label>
-						<input class="form-control" value="@ViewBag.University.TuitionFee"/>
+						<input class="form-control" value="@ViewBag.University.TuitionFee" readonly/>
 					</div>
 
 					<div class="form-group col-md-12">
 						<label>Deskripsi</label>
-						<textarea class="form-control">@ViewBag.University.Description</textarea>
+						<textarea class="form-control" readonly>@ViewBag.University.Description</textarea>
 					</div>
 
 				</div>
@@ -73,7 +72,7 @@
 
 					 <div class="form-group col-md-12">
 						<label>Alamat Lengkap</label>
-						<textarea class="form-control">@ViewBag.University.Address</textarea>
+						<textarea class="form-control" readonly>@ViewBag.University.Address</textarea>
 					</div>					
 				</div>
 			</div>
