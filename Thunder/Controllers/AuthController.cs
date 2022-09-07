@@ -72,6 +72,7 @@ namespace Thunder.Controllers
 
                 if (user == null)
                 {
+                    user = new User();
                     user.CreatedDate = DateTime.Now;
                     user.IsExist = 1;
                     user.RoleId = 1;
