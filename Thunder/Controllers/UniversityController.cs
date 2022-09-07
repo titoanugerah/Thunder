@@ -33,6 +33,7 @@ namespace Thunder.Controllers
             try
             {
                 ViewBag.University = await thunderDB.University
+                    .Include(table => table.Accreditation)
                     .Include(table => table.City)
                     .Where(column => column.Id == id)
                     .FirstOrDefaultAsync();
