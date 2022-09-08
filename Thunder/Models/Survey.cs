@@ -26,7 +26,14 @@ namespace Thunder.Models
         {
             get
             {
-                return Convert.ToDouble(PriceToCity);
+                if (PriceToCity.Contains("/"))
+                {
+                    return Convert.ToDouble(PriceToCity.Split('/').FirstOrDefault()) / Convert.ToDouble(PriceToCity.Split('/').Last());
+                }
+                else
+                {
+                    return Convert.ToDouble(PriceToCity);
+                }
             }
         }
 
@@ -45,7 +52,7 @@ namespace Thunder.Models
                 }
                 else
                 {
-                    return Convert.ToDouble(PriceToCity.Replace("1//", string.Empty));
+                    return Convert.ToDouble(PriceToCity.Replace("1/", string.Empty));
                 }
             }
         }
@@ -56,7 +63,14 @@ namespace Thunder.Models
         {
             get
             {
-                return Convert.ToDouble(FacilityToPrice);
+                if (FacilityToPrice.Contains("/"))
+                {
+                    return Convert.ToDouble(FacilityToPrice.Split('/').FirstOrDefault()) / Convert.ToDouble(FacilityToPrice.Split('/').Last());
+                }
+                else
+                {
+                    return Convert.ToDouble(FacilityToPrice);
+                }
             }
         }
 
@@ -75,7 +89,7 @@ namespace Thunder.Models
                 }
                 else
                 {
-                    return Convert.ToDouble(FacilityToPrice.Replace("1//", string.Empty));
+                    return Convert.ToDouble(FacilityToPrice.Replace("1/", string.Empty));
                 }
             }
         }
@@ -86,7 +100,14 @@ namespace Thunder.Models
         {
             get
             {
-                return Convert.ToDouble(FacilityToCity);
+                if (FacilityToCity.Contains("/"))
+                {
+                    return Convert.ToDouble(FacilityToCity.Split('/').FirstOrDefault()) / Convert.ToDouble(FacilityToCity.Split('/').Last());
+                }
+                else
+                {
+                    return Convert.ToDouble(FacilityToCity);
+                }
             }
         }
 
@@ -105,7 +126,7 @@ namespace Thunder.Models
                 }
                 else
                 {
-                    return Convert.ToDouble(FacilityToCity.Replace("1//", string.Empty));
+                    return Convert.ToDouble(FacilityToCity.Replace("1/", string.Empty));
                 }
             }
         }
@@ -116,7 +137,14 @@ namespace Thunder.Models
         {
             get
             {
-                return Convert.ToDouble(PriceToAccreditation);
+                if (PriceToAccreditation.Contains("/"))
+                {
+                    return Convert.ToDouble(PriceToAccreditation.Split('/').FirstOrDefault()) / Convert.ToDouble(PriceToAccreditation.Split('/').Last());
+                }
+                else
+                {
+                    return Convert.ToDouble(PriceToAccreditation);
+                }
             }
         }
 
@@ -135,7 +163,7 @@ namespace Thunder.Models
                 }
                 else
                 {
-                    return Convert.ToDouble(PriceToAccreditation.Replace("1//", string.Empty));
+                    return Convert.ToDouble(PriceToAccreditation.Replace("1/", string.Empty));
                 }
             }
         }
@@ -146,7 +174,15 @@ namespace Thunder.Models
         {
             get
             {
-                return Convert.ToDouble(AccreditationToCity);
+                if (AccreditationToCity.Contains("/"))
+                {
+                    return Convert.ToDouble(AccreditationToCity.Split('/').FirstOrDefault()) / Convert.ToDouble(AccreditationToCity.Split('/').Last());
+                }
+                else
+                {
+                    return Convert.ToDouble(AccreditationToCity);
+                }
+
             }
         }
 
@@ -165,7 +201,7 @@ namespace Thunder.Models
                 }
                 else
                 {
-                    return Convert.ToDouble(AccreditationToCity.Replace("1//", string.Empty));
+                    return Convert.ToDouble(AccreditationToCity.Replace("1/", string.Empty));
                 }
             }
         }
@@ -175,7 +211,14 @@ namespace Thunder.Models
         {
             get
             {
-                return Convert.ToDouble(FacilityToAccreditation);
+                if (FacilityToAccreditation.Contains("/"))
+                {
+                    return Convert.ToDouble(FacilityToAccreditation.Split('/').FirstOrDefault()) / Convert.ToDouble(FacilityToAccreditation.Split('/').Last());
+                }
+                else
+                {
+                    return Convert.ToDouble(FacilityToAccreditation);
+                }
             }
         }
 
@@ -194,7 +237,7 @@ namespace Thunder.Models
                 }
                 else
                 {
-                    return Convert.ToDouble(FacilityToAccreditation.Replace("1//", string.Empty));
+                    return Convert.ToDouble(FacilityToAccreditation.Replace("1/", string.Empty));
                 }
             }
         }

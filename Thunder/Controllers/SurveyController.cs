@@ -48,6 +48,12 @@ namespace Thunder.Controllers
                     survey = await thunderDB.Survey
                     .Where(column => column.UserId == User.GetId())
                     .FirstOrDefaultAsync();
+                    survey.PriceToCity = inputSurvey.PriceToCity;
+                    survey.FacilityToPrice = inputSurvey.FacilityToPrice;
+                    survey.PriceToAccreditation = inputSurvey.PriceToAccreditation;
+                    survey.FacilityToCity = inputSurvey.FacilityToCity;
+                    survey.AccreditationToCity = inputSurvey.AccreditationToCity;
+                    survey.FacilityToAccreditation = inputSurvey.FacilityToAccreditation;
                     survey.UpdatedDate = DateTime.Now;
                     thunderDB.Entry(survey).State = EntityState.Modified;
                     thunderDB.Survey.Update(survey);

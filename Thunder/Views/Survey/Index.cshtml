@@ -109,7 +109,7 @@
 
 					<div class="form-group">
 						<label>Bagaimana pendapat anda jika membandingkan antara fasilitas kuliah terhadap lokasi perguruan tinggi</label>
-						<select id="facilityToCity" class="form-control">
+						<select id="facilityToCity" class="form-control" >
 							<option value="9">Fasilitas kuliah sangat lebih penting dibanding lokasi kuliah</option>
 							<option value="8">Fasilitas kuliah sangat penting dibanding lokasi kuliah</option>
 							<option value="7">Fasilitas kuliah jauh lebih penting dibanding lokasi kuliah</option>
@@ -177,6 +177,9 @@
 					</div>
 
 				</div>
+				<div class="card-body row">
+					<button class="btn btn-info" type="button" onclick="Update()">Simpan</button>
+				</div>
 			</div>
 		</div>	
 		
@@ -186,6 +189,16 @@
 </div>
 
 <script>
+		$( document ).ready(function() {
+            $('#priceToCity').val('@ViewBag.Survey.PriceToCity').change;
+            $('#facilityToPrice').val('@ViewBag.Survey.FacilityToPrice').change;
+            $('#priceToAccreditation').val('@ViewBag.Survey.PriceToAccreditation').change;
+            $('#facilityToCity').val('@ViewBag.Survey.FacilityToCity').change;
+            $('#accreditationToCity').val('@ViewBag.Survey.AccreditationToCity').change;
+            $('#facilityToAccreditation').val('@ViewBag.Survey.FacilityToAccreditation').change;
+			console.log('@ViewBag.Survey');
+		});		
+
 	    function Update(){
         $.ajax({
             type: "POST",
@@ -208,5 +221,6 @@
 				notify("Gagal", "survey gagal di update" + result.responseText, "danger");
             }
         });
+		}
 
 </script>
