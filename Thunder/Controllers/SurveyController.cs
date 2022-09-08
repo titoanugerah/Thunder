@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Thunder.DataAccess;
+using Thunder.Models;
 
 namespace Thunder.Controllers
 {
@@ -18,12 +20,58 @@ namespace Thunder.Controllers
         {
             try
             {
+                ViewBag.IsAlreadyInput = thunderDB.Survey
+                    .Where(column => column.UserId == User.GetId())
+                    .Any();
+                ViewBag.Survey = thunderDB.Survey
+                    .Where(column => column.UserId == User.GetId())
+                    .FirstOrDefault();
                 return View();
             }
             catch (Exception error)
             {
                 logger.LogError(error, $"Survey Controller - Index");
                 throw;
+            }
+        }
+
+        public async Task<IActionResult> Update(Survey inputSurvey)
+        {
+            try
+            {
+                bool IsAlreadyInput = thunderDB.Survey
+                    .Where(column => column.UserId == User.GetId())
+                    .Any();
+                Survey survey = new Survey();
+                if (IsAlreadyInput)
+                {
+                    survey = await thunderDB.Survey
+                    .Where(column => column.UserId == User.GetId())
+                    .FirstOrDefaultAsync();
+                    survey.UpdatedDate = DateTime.Now;
+                    thunderDB.Entry(survey).State = EntityState.Modified;
+                    thunderDB.Survey.Update(survey);
+                }
+                else
+                {
+                    survey.UserId = User.GetId();
+                    survey.CreatedDate = DateTime.Now;
+                    survey.PriceToCity = inputSurvey.PriceToCity;
+                    survey.FacilityToPrice = inputSurvey.FacilityToPrice;
+                    survey.PriceToAccreditation = inputSurvey.PriceToAccreditation;
+                    survey.FacilityToCity = inputSurvey.FacilityToCity;
+                    survey.AccreditationToCity = inputSurvey.AccreditationToCity;
+                    survey.FacilityToAccreditation = inputSurvey.FacilityToAccreditation;
+                    thunderDB.Entry(survey).State = EntityState.Added;
+                    thunderDB.Survey.Add(survey);
+                }
+                await thunderDB.SaveChangesAsync();
+                return new JsonResult(Ok());
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, $"Survey Controller - Update");
+                return BadRequest(error.InnerException.Message);
             }
         }
 

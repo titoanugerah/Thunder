@@ -11,9 +11,9 @@ namespace Thunder
             return claimValue != null ? claimValue : "";
         }
 
-        public static string GetId(this ClaimsPrincipal user)
+        public static int GetId(this ClaimsPrincipal user)
         {
-            return GetClaim(user, "Id").ToString();
+            return Convert.ToInt32(GetClaim(user, "Id"));
         }
 
         public static string GetRoleId(this ClaimsPrincipal user)

@@ -1,0 +1,212 @@
+﻿<div class="panel-header bg-primary-gradient">
+	<div class="page-inner py-5">
+		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+			<div>
+				<h2 class="text-white pb-2 fw-bold">Survey Prioritas</h2>
+			</div>
+            <div class="ml-md-auto py-2 py-md-0">
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="page-inner mt--5">
+	<div class="card card-info card-round">
+		<div class="card-body text-center">
+			@if(ViewBag.IsAlreadyInput){
+				<div class="card-desc">
+					Anda sudah pernah melakukan survey pengisian data
+				</div>
+			}
+			else{
+				<div class="card-desc">
+					Anda belum pernah melakukan survey pengisian data, silahkan isi kolom dibawah ini untuk berpartisipasis
+				</div>	
+			}
+		</div>
+	</div>
+
+
+	<div class="row mt--2">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-head-row">
+						<div class="card-title">Survey Prioritas</div>
+					</div>
+				</div>
+				<div class="card-body row">
+
+					<div class="form-group">
+						<label>Bagaimana pendapat anda jika membandingkan antara biaya kuliah terhadap lokasi perguruan tinggi</label>
+						<select id="priceToCity" class="form-control">
+							<option value="9">Biaya kuliah sangat lebih penting dibanding lokasi kuliah</option>
+							<option value="8">Biaya kuliah sangat penting dibanding lokasi kuliah</option>
+							<option value="7">Biaya kuliah jauh lebih penting dibanding lokasi kuliah</option>
+							<option value="6">Biaya kuliah jauh penting dibanding lokasi kuliah</option>
+							<option value="5">Biaya kuliah cukup lebih penting dibanding lokasi kuliah</option>
+							<option value="4">Biaya kuliah cukup penting dibanding lokasi kuliah</option>
+							<option value="3">Biaya kuliah sedikit lebih penting dibanding lokasi kuliah</option>
+							<option value="2">Biaya kuliah sedikit penting dibanding lokasi kuliah</option>
+							<option value="1">Biaya kuliah sama pentingya dengan lokasi kuliah</option>
+							<option value="1/2">Lokasi kuliah sedikit penting dibanding biaya kuliah</option>
+							<option value="1/3">Lokasi kuliah sedikit lebih penting dibanding biaya kuliah</option>
+							<option value="1/4">Lokasi kuliah cukup penting dibanding biaya kuliah</option>
+							<option value="1/5">Lokasi kuliah cukup lebih penting dibanding biaya kuliah</option>
+							<option value="1/6">Lokasi kuliah jauh penting dibanding biaya kuliah</option>
+							<option value="1/7">Lokasi kuliah jauh lebih penting dibanding biaya kuliah</option>
+							<option value="1/8">Lokasi kuliah sangat penting dibanding biaya kuliah</option>
+							<option value="1/9">Lokasi kuliah sangat lebih penting dibanding biaya kuliah</option>							
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label>Bagaimana pendapat anda jika membandingkan antara fasilitas kuliah terhadap biaya kuliah</label>
+						<select id="facilityToPrice" class="form-control">
+							<option value="9">Fasilitas kuliah sangat lebih penting dibanding biaya kuliah</option>
+							<option value="8">Fasilitas kuliah sangat penting dibanding biaya kuliah</option>
+							<option value="7">Fasilitas kuliah jauh lebih penting dibanding biaya kuliah</option>
+							<option value="6">Fasilitas kuliah jauh penting dibanding biaya kuliah</option>
+							<option value="5">Fasilitas kuliah cukup lebih penting dibanding biaya kuliah</option>
+							<option value="4">Fasilitas kuliah cukup penting dibanding biaya kuliah</option>
+							<option value="3">Fasilitas kuliah sedikit lebih penting dibanding biaya kuliah</option>
+							<option value="2">Fasilitas kuliah sedikit penting dibanding biaya kuliah</option>
+							<option value="1">Fasilitas kuliah sama pentingya dengan biaya kuliah</option>
+							<option value="1/2">Biaya kuliah sedikit penting dibanding fasilitas kuliah</option>
+							<option value="1/3">Biaya kuliah sedikit lebih penting dibanding fasilitas kuliah</option>
+							<option value="1/4">Biaya kuliah cukup penting dibanding fasilitas kuliah</option>
+							<option value="1/5">Biaya kuliah cukup lebih penting dibanding fasilitas kuliah</option>
+							<option value="1/6">Biaya kuliah jauh penting dibanding fasilitas kuliah</option>
+							<option value="1/7">Biaya kuliah jauh lebih penting dibanding fasilitas kuliah</option>
+							<option value="1/8">Biaya kuliah sangat penting dibanding fasilitas kuliah</option>
+							<option value="1/9">Biaya kuliah sangat lebih penting dibanding fasilitas kuliah</option>							
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label>Bagaimana pendapat anda jika membandingkan antara biaya kuliah terhadap akreditasi perguruan tinggi</label>
+						<select id="priceToAccreditation" class="form-control">
+							<option value="9">Biaya kuliah sangat lebih penting dibanding akreditasi kuliah</option>
+							<option value="8">Biaya kuliah sangat penting dibanding akreditasi kuliah</option>
+							<option value="7">Biaya kuliah jauh lebih penting dibanding akreditasi kuliah</option>
+							<option value="6">Biaya kuliah jauh penting dibanding akreditasi kuliah</option>
+							<option value="5">Biaya kuliah cukup lebih penting dibanding akreditasi kuliah</option>
+							<option value="4">Biaya kuliah cukup penting dibanding akreditasi kuliah</option>
+							<option value="3">Biaya kuliah sedikit lebih penting dibanding akreditasi kuliah</option>
+							<option value="2">Biaya kuliah sedikit penting dibanding akreditasi kuliah</option>
+							<option value="1">Biaya kuliah sama pentingya dengan akreditasi kuliah</option>
+							<option value="1/2">Akreditasi kuliah sedikit penting dibanding biaya kuliah</option>
+							<option value="1/3">Akreditasi kuliah sedikit lebih penting dibanding biaya kuliah</option>
+							<option value="1/4">Akreditasi kuliah cukup penting dibanding biaya kuliah</option>
+							<option value="1/5">Akreditasi kuliah cukup lebih penting dibanding biaya kuliah</option>
+							<option value="1/6">Akreditasi kuliah jauh penting dibanding biaya kuliah</option>
+							<option value="1/7">Akreditasi kuliah jauh lebih penting dibanding biaya kuliah</option>
+							<option value="1/8">Akreditasi kuliah sangat penting dibanding biaya kuliah</option>
+							<option value="1/9">Akreditasi kuliah sangat lebih penting dibanding biaya kuliah</option>							
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label>Bagaimana pendapat anda jika membandingkan antara fasilitas kuliah terhadap lokasi perguruan tinggi</label>
+						<select id="facilityToCity" class="form-control">
+							<option value="9">Fasilitas kuliah sangat lebih penting dibanding lokasi kuliah</option>
+							<option value="8">Fasilitas kuliah sangat penting dibanding lokasi kuliah</option>
+							<option value="7">Fasilitas kuliah jauh lebih penting dibanding lokasi kuliah</option>
+							<option value="6">Fasilitas kuliah jauh penting dibanding lokasi kuliah</option>
+							<option value="5">Fasilitas kuliah cukup lebih penting dibanding lokasi kuliah</option>
+							<option value="4">Fasilitas kuliah cukup penting dibanding lokasi kuliah</option>
+							<option value="3">Fasilitas kuliah sedikit lebih penting dibanding lokasi kuliah</option>
+							<option value="2">Fasilitas kuliah sedikit penting dibanding lokasi kuliah</option>
+							<option value="1">Fasilitas kuliah sama pentingya dengan lokasi kuliah</option>
+							<option value="1/2">Lokasi kuliah sedikit penting dibanding fasilitas kuliah</option>
+							<option value="1/3">Lokasi kuliah sedikit lebih penting dibanding fasilitas kuliah</option>
+							<option value="1/4">Lokasi kuliah cukup penting dibanding fasilitas kuliah</option>
+							<option value="1/5">Lokasi kuliah cukup lebih penting dibanding fasilitas kuliah</option>
+							<option value="1/6">Lokasi kuliah jauh penting dibanding fasilitas kuliah</option>
+							<option value="1/7">Lokasi kuliah jauh lebih penting dibanding fasilitas kuliah</option>
+							<option value="1/8">Lokasi kuliah sangat penting dibanding fasilitas kuliah</option>
+							<option value="1/9">Lokasi kuliah sangat lebih penting dibanding fasilitas kuliah</option>							
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label>Bagaimana pendapat anda jika membandingkan antara fasilitas kuliah terhadap lokasi perguruan tinggi</label>
+						<select id="facilityToAccreditation" class="form-control">
+							<option value="9">Fasilitas kuliah sangat lebih penting dibanding akreditasi kuliah</option>
+							<option value="8">Fasilitas kuliah sangat penting dibanding akreditasi kuliah</option>
+							<option value="7">Fasilitas kuliah jauh lebih penting dibanding akreditasi kuliah</option>
+							<option value="6">Fasilitas kuliah jauh penting dibanding akreditasi kuliah</option>
+							<option value="5">Fasilitas kuliah cukup lebih penting dibanding akreditasi kuliah</option>
+							<option value="4">Fasilitas kuliah cukup penting dibanding akreditasi kuliah</option>
+							<option value="3">Fasilitas kuliah sedikit lebih penting dibanding akreditasi kuliah</option>
+							<option value="2">Fasilitas kuliah sedikit penting dibanding akreditasi kuliah</option>
+							<option value="1">Fasilitas kuliah sama pentingya dengan akreditasi kuliah</option>
+							<option value="1/2">Akreditasi kuliah sedikit penting dibanding fasilitas kuliah</option>
+							<option value="1/3">Akreditasi kuliah sedikit lebih penting dibanding fasilitas kuliah</option>
+							<option value="1/4">Akreditasi kuliah cukup penting dibanding fasilitas kuliah</option>
+							<option value="1/5">Akreditasi kuliah cukup lebih penting dibanding fasilitas kuliah</option>
+							<option value="1/6">Akreditasi kuliah jauh penting dibanding fasilitas kuliah</option>
+							<option value="1/7">Akreditasi kuliah jauh lebih penting dibanding fasilitas kuliah</option>
+							<option value="1/8">Akreditasi kuliah sangat penting dibanding fasilitas kuliah</option>
+							<option value="1/9">Akreditasi kuliah sangat lebih penting dibanding fasilitas kuliah</option>							
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label>Bagaimana pendapat anda jika membandingkan antara fasilitas kuliah terhadap lokasi perguruan tinggi</label>
+						<select id="accreditationToCity" class="form-control">
+							<option value="9">Akreditasi kuliah sangat lebih penting dibanding lokasi kuliah</option>
+							<option value="8">Akreditasi kuliah sangat penting dibanding lokasi kuliah</option>
+							<option value="7">Akreditasi kuliah jauh lebih penting dibanding lokasi kuliah</option>
+							<option value="6">Akreditasi kuliah jauh penting dibanding lokasi kuliah</option>
+							<option value="5">Akreditasi kuliah cukup lebih penting dibanding lokasi kuliah</option>
+							<option value="4">Akreditasi kuliah cukup penting dibanding lokasi kuliah</option>
+							<option value="3">Akreditasi kuliah sedikit lebih penting dibanding lokasi kuliah</option>
+							<option value="2">Akreditasi kuliah sedikit penting dibanding lokasi kuliah</option>
+							<option value="1">Akreditasi kuliah sama pentingya dengan lokasi kuliah</option>
+							<option value="1/2">Lokasi kuliah sedikit penting dibanding akreditasi kuliah</option>
+							<option value="1/3">Lokasi kuliah sedikit lebih penting dibanding akreditasi kuliah</option>
+							<option value="1/4">Lokasi kuliah cukup penting dibanding akreditasi kuliah</option>
+							<option value="1/5">Lokasi kuliah cukup lebih penting dibanding akreditasi kuliah</option>
+							<option value="1/6">Lokasi kuliah jauh penting dibanding akreditasi kuliah</option>
+							<option value="1/7">Lokasi kuliah jauh lebih penting dibanding akreditasi kuliah</option>
+							<option value="1/8">Lokasi kuliah sangat penting dibanding akreditasi kuliah</option>
+							<option value="1/9">Lokasi kuliah sangat lebih penting dibanding akreditasi kuliah</option>							
+						</select>
+					</div>
+
+				</div>
+			</div>
+		</div>	
+		
+		
+	</div>
+	
+</div>
+
+<script>
+	    function Update(){
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            contentType: "application/x-www-form-urlencoded",
+            url: "survey/update",
+            data : {
+                PriceToCity : $('#priceToCity').val(),
+                FacilityToPrice : $('#facilityToPrice').val(),
+                PriceToAccreditation : $('#priceToAccreditation').val(),
+                FacilityToCity : $('#facilityToCity').val(),
+                AccreditationToCity : $('#accreditationToCity').val(),
+                FacilityToAccreditation : $('#facilityToAccreditation').val(),
+            },
+            success: function (result) {
+				notify("Berhasil", "survey berhasil di update", "success");
+            },
+            error: function (result) {
+                console.log(result);
+				notify("Gagal", "survey gagal di update" + result.responseText, "danger");
+            }
+        });
+
+</script>
