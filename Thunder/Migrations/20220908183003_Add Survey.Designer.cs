@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Thunder.DataAccess;
 
@@ -10,9 +11,10 @@ using Thunder.DataAccess;
 namespace Thunder.Migrations
 {
     [DbContext(typeof(ThunderDB))]
-    partial class ThunderDBModelSnapshot : ModelSnapshot
+    [Migration("20220908183003_Add Survey")]
+    partial class AddSurvey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,43 +116,6 @@ namespace Thunder.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Role");
-                });
-
-            modelBuilder.Entity("Thunder.Models.Survey", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("AccreditationPriority")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CityPriority")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("FacilityPriority")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IsExist")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PricePriority")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Survey");
                 });
 
             modelBuilder.Entity("Thunder.Models.University", b =>
@@ -273,17 +238,6 @@ namespace Thunder.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("Thunder.Models.Survey", b =>
-                {
-                    b.HasOne("Thunder.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Thunder.Models.University", b =>

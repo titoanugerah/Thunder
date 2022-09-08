@@ -24,6 +24,7 @@ namespace Thunder.DataAccess
         public DbSet<Facility> Facility { set; get; }
         public DbSet<UniversityFacility> UniversityFacility { set; get; }
         public DbSet<Accreditation> Accreditation { set; get; }
+        public DbSet<Survey> Survey { set; get; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder)
         {
