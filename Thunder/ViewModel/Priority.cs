@@ -2,7 +2,7 @@
 {
     public class Priority
     {
-        public Priority(int id, string name, int score)
+        public Priority(int id, string name, int score = 0)
         {
             Id = id;
             Name = name;
