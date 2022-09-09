@@ -43,6 +43,21 @@ namespace Thunder.Controllers
             }
         }
 
+        public async Task<IActionResult> Result()
+        {
+            try
+            {
+                ViewBag.Survey = thunderDB.Survey
+                    .ToList();
+                return View();
+            }
+            catch (Exception error)
+            {
+                logger.LogError(error, $"Survey ");
+                throw;
+            }
+        }
+
         public async Task<IActionResult> Update(Survey inputSurvey)
         {
             try
