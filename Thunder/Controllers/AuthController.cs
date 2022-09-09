@@ -49,6 +49,7 @@ namespace Thunder.Controllers
             }
         }
 
+		[Route("Auth/Validate")]
         public async Task<IActionResult> Validate()
         {
             try
