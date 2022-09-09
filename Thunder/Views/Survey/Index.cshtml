@@ -190,13 +190,15 @@
 
 <script>
 		$( document ).ready(function() {
-            $('#priceToCity').val('@ViewBag.Survey.PriceToCity').change;
-            $('#facilityToPrice').val('@ViewBag.Survey.FacilityToPrice').change;
-            $('#priceToAccreditation').val('@ViewBag.Survey.PriceToAccreditation').change;
-            $('#facilityToCity').val('@ViewBag.Survey.FacilityToCity').change;
-            $('#accreditationToCity').val('@ViewBag.Survey.AccreditationToCity').change;
-            $('#facilityToAccreditation').val('@ViewBag.Survey.FacilityToAccreditation').change;
-			console.log('@ViewBag.Survey');
+			if('@ViewBag.IsAlreadyInput' == true){
+				$('#priceToCity').val('@ViewBag.Survey.PriceToCity').change;
+				$('#facilityToPrice').val('@ViewBag.Survey.FacilityToPrice').change;
+				$('#priceToAccreditation').val('@ViewBag.Survey.PriceToAccreditation').change;
+				$('#facilityToCity').val('@ViewBag.Survey.FacilityToCity').change;
+				$('#accreditationToCity').val('@ViewBag.Survey.AccreditationToCity').change;
+				$('#facilityToAccreditation').val('@ViewBag.Survey.FacilityToAccreditation').change;
+				console.log('@ViewBag.Survey');
+			}		
 		});		
 
 	    function Update(){
