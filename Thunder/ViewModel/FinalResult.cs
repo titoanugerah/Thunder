@@ -8,10 +8,10 @@ namespace Thunder.ViewModel
         {
             Id = id;
             University = university;
-            ScoreCity = scoreCity * priorities.Where(x => x.Name == "City").First().Weight;
-            ScoreFacility = scoreFacility * priorities.Where(x => x.Name == "Facility").First().Weight;
-            ScoreAccreditation = scoreAccreditation * priorities.Where(x => x.Name == "Accreditation").First().Weight;
-            ScoreTuitionFee = scoreTuitionFee * priorities.Where(x => x.Name == "Price").First().Weight;
+            ScoreCity = scoreCity * priorities.Where(x => x.Name == "city").First().Weight;
+            ScoreFacility = scoreFacility * priorities.Where(x => x.Name == "facility").First().Weight;
+            ScoreAccreditation = scoreAccreditation * priorities.Where(x => x.Name == "accreditation").First().Weight;
+            ScoreTuitionFee = scoreTuitionFee * priorities.Where(x => x.Name == "price").First().Weight;
             ScoreTotal = Math.Round(ScoreCity + ScoreFacility + ScoreAccreditation + ScoreTuitionFee, 2, MidpointRounding.AwayFromZero) ;
         }
 

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MatrixDotNet;
+using MatrixDotNet.Extensions.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -59,10 +61,10 @@ namespace Thunder.Controllers
                 //    no++;
                 //}
 
-                priorities.Add(new Priority(1, "Price"));
-                priorities.Add(new Priority(2, "City"));
-                priorities.Add(new Priority(3, "Facility"));
-                priorities.Add(new Priority(3, "Accreditation"));
+                priorities.Add(new Priority(1, "price"));
+                priorities.Add(new Priority(2, "city"));
+                priorities.Add(new Priority(3, "facility"));
+                priorities.Add(new Priority(3, "accreditation"));
 
 
                 List<University> universities = thunderDB.University
@@ -350,20 +352,79 @@ namespace Thunder.Controllers
 
                 List<FinalResult> finalResults = new List<FinalResult>();
                 no = 1;
-                foreach (University university in universities)
-                {
+                //foreach (University university in universities)
+                //{
 
-                    finalResults.Add(new FinalResult(no, university, university.ScoreCity, university.ScoreFacility, university.ScoreAccreditation, university.ScoreTuitionFee, priorities));
+                //    finalResults.Add(new FinalResult(no, university, university.ScoreCity, university.ScoreFacility, university.ScoreAccreditation, university.ScoreTuitionFee, priorities));
+                //}
+                //List<FinalResult> finalResults2 = new List<FinalResult>();
+                //finalResults2 = finalResults;
+                //if (inputAccreditations.Count() > 0)
+                //{
+                //    finalResults2 = finalResults2.Where(x => inputAccreditations.Contains(x.University.Accreditation.Name)).ToList();
+                //}
+                //if (inputCities.Count() > 0)
+                //{
+                //    finalResults2 = finalResults2.Where(x => inputCities.Contains(x.University.CityId.ToString())).ToList();
+                //}
+                //if (inputFacilities.Count() > 0)
+                //{
+                //    List<University> availableUniversity = thunderDB.UniversityFacility
+                //        .Include(table => table.University)
+                //        .Include(table => table.Facility)
+                //        .Where(column => inputFacilities.Contains(column.FacilityId.ToString()))
+                //        .Select(column => column.University)
+                //        .Distinct()
+                //        .ToList();
+
+                //    finalResults2 = finalResults2.Where(x => availableUniversity.Contains(x.University)).ToList();
+                //}
+                //if (inputTuitionFee != 0)
+                //{
+                //    finalResults2 = finalResults2.Where(x => x.University.TuitionFee <= inputTuitionFee).ToList();
+                //}
+
+
+                //if (finalResults2.Any())
+                //{
+                //    return new JsonResult(finalResults2.OrderBy(x => x.ScoreTotal));
+                //}
+                //else
+                //{
+                //    return new JsonResult(finalResults.OrderBy(x => x.ScoreTotal));
+                //}
+
+                //supermatrix.
+                double[,] matrix = new double[(5 + universities.Count()), (5 + universities.Count())];
+                matrix[0, 1] = priorities.Where(x => x.Name == "city").First().Weight;
+                matrix[0, 2] = priorities.Where(x => x.Name == "accreditation").First().Weight;
+                matrix[0, 2] = priorities.Where(x => x.Name == "facility").First().Weight;
+                matrix[0, 2] = priorities.Where(x => x.Name == "price").First().Weight;
+                for (int row = 5; row < (5 + universities.Count()); row++)
+                {
+                    matrix[1, row] = universities.Where(x => x.Id == row - 4).First().ScoreCity;
+                    matrix[2, row] = universities.Where(x => x.Id == row - 4).First().ScoreAccreditation;
+                    matrix[3, row] = universities.Where(x => x.Id == row - 4).First().ScoreFacility;
+                    matrix[4, row] = universities.Where(x => x.Id == row - 4).First().ScoreTuitionFee;
+                    matrix[row, row] = 1;
                 }
-                List<FinalResult> finalResults2 = new List<FinalResult>();
-                finalResults2 = finalResults;
+                Matrix<double> supermatrix = new Matrix<double>(matrix);
+
+                var finderMatrix = supermatrix * supermatrix;
+                List<FinderResult> finderResults = new List<FinderResult>();
+                List<FinderResult> finderResults2 = new List<FinderResult>();
+                for (int row = 5; row < (5 + universities.Count()); row++)
+                {
+                    finderResults.Add(new FinderResult(universities.Where(x => x.Id == row - 4).First(), finderMatrix[0, row]));
+                }
+
                 if (inputAccreditations.Count() > 0)
                 {
-                    finalResults2 = finalResults2.Where(x => inputAccreditations.Contains(x.University.Accreditation.Name)).ToList();
+                    finderResults2 = finderResults.Where(x => inputAccreditations.Contains(x.University.Accreditation.Name)).ToList();
                 }
                 if (inputCities.Count() > 0)
                 {
-                    finalResults2 = finalResults2.Where(x => inputCities.Contains(x.University.CityId.ToString())).ToList();
+                    finderResults2 = finderResults.Where(x => inputCities.Contains(x.University.CityId.ToString())).ToList();
                 }
                 if (inputFacilities.Count() > 0)
                 {
@@ -375,21 +436,20 @@ namespace Thunder.Controllers
                         .Distinct()
                         .ToList();
 
-                    finalResults2 = finalResults2.Where(x => availableUniversity.Contains(x.University)).ToList();
+                    finderResults2 = finderResults.Where(x => availableUniversity.Contains(x.University)).ToList();
                 }
                 if (inputTuitionFee != 0)
                 {
-                    finalResults2 = finalResults2.Where(x => x.University.TuitionFee <= inputTuitionFee).ToList();
+                    finderResults2 = finderResults.Where(x => x.University.TuitionFee <= inputTuitionFee).ToList();
                 }
 
-
-                if (finalResults2.Any())
+                if (finderResults2.Any())
                 {
-                    return new JsonResult(finalResults2.OrderBy(x => x.ScoreTotal));
+                    return new JsonResult(finderResults2.OrderBy(x => x.FinalScore));
                 }
                 else
                 {
-                    return new JsonResult(finalResults.OrderBy(x => x.ScoreTotal));
+                    return new JsonResult(finderResults.OrderBy(x => x.FinalScore));
                 }
             }
             catch (Exception error)
