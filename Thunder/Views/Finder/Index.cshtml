@@ -116,7 +116,7 @@
 	});
 
 	function Find(){
-		if($('#priority').val().length == 4) {
+		//if($('#priority').val().length == 4) {
 			$.ajax({
 				type: "POST",
 				dataType: "JSON",
@@ -142,10 +142,10 @@
 					notify("Gagal", "Gagal mencarikan universitas " + result.responseText, "danger");
 				}
 			});
-		}
-		else {
-			notify("Gagal", "Prioritas harus dipilih", "danger");
-		}
+		//}
+		//else {
+		//	notify("Gagal", "Prioritas harus dipilih", "danger");
+		//}
 
 	}
 
