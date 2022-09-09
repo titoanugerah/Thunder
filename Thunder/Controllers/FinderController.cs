@@ -41,14 +41,14 @@ namespace Thunder.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Find(string Cities, string Facilities, string Accreditation, string Priorities, int TuitionFee = 0 )
+        public async Task<IActionResult> Find(string Cities, string Facilities, string Accreditation, int TuitionFee = 0 )
         {
             try
             {
                 List<string> inputCities = JsonConvert.DeserializeObject<List<string>>(Cities);
                 List<string> inputAccreditations = JsonConvert.DeserializeObject<List<string>>(Accreditation);
                 List<string> inputFacilities = JsonConvert.DeserializeObject<List<string>>(Facilities);
-                List<string> inputPriorities = JsonConvert.DeserializeObject<List<string>>(Priorities);
+                //List<string> inputPriorities = JsonConvert.DeserializeObject<List<string>>(Priorities);
                 int inputTuitionFee = TuitionFee;
                 int no = 1;
 

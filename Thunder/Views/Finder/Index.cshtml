@@ -80,7 +80,7 @@
 						</div>                    
 					</div>
 
-					<div class="form-group">
+					@*<div class="form-group">
 						<label>Prioritas</label>
 						<div class="select2-input">
 							<select id="priority" name="priorities[]" class="form-control multi" multiple="multiple" style="width:220px;">
@@ -90,7 +90,7 @@
 								<option value="Price">Harga</option>								
 							</select>
 						</div>                    
-					</div>
+					</div>*@
 					<div class="form-group">
 						<label>Maksimal SPP / Semester</label>
 						<input id="maxTuitionFee" value="0" type="number" class="form-control"  />
@@ -126,7 +126,7 @@
 					Cities : JSON.stringify( $('#cities').val()),
 					Facilities : JSON.stringify( $('#facilities').val()),
 					Accreditation : JSON.stringify( $('#acreditation').val()),
-					Priorities : JSON.stringify( $('#priority').val()),
+//					Priorities : JSON.stringify( $('#priority').val()),
 					TuitionFee : $("#maxTuitionFee").val()
 				},
 				success: function (result) {
