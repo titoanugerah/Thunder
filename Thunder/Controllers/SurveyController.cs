@@ -23,9 +23,17 @@ namespace Thunder.Controllers
                 ViewBag.IsAlreadyInput = thunderDB.Survey
                     .Where(column => column.UserId == User.GetId())
                     .Any();
-                ViewBag.Survey = thunderDB.Survey
-                    .Where(column => column.UserId == User.GetId())
-                    .FirstOrDefault();
+                if (ViewBag.IsAlreadyInput)
+                {
+                    ViewBag.Survey = thunderDB.Survey
+                        .Where(column => column.UserId == User.GetId())
+                        .FirstOrDefault();
+                }
+                else
+                {
+                    ViewBag.Survey = new Survey();
+
+                }
                 return View();
             }
             catch (Exception error)
