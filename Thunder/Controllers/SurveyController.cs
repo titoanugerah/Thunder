@@ -48,6 +48,7 @@ namespace Thunder.Controllers
             try
             {
                 ViewBag.Survey = thunderDB.Survey
+                    .Include(table => table.User)
                     .ToList();
                 return View();
             }

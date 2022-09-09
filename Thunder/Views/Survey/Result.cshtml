@@ -18,6 +18,7 @@
 						<table id="basic-datatables" class="display table table-striped table-hover" cellspacing="0" width="100%">
 							<thead>
                                 <tr>
+                                    <th> Nama </th>
                                     <th> AL </th>
                                     <th> FA </th>
                                     <th> FL </th>
@@ -30,12 +31,13 @@
 								@foreach (Survey survey in ViewBag.Survey)
 								{
 									<tr>
-										<td>@survey.AccreditationToCityValue</td>
-										<td>@survey.FacilityToAccreditationValue</td>
-										<td>@survey.FacilityToCityValue</td>
-										<td>@survey.FacilityToPriceValue</td>
-										<td>@survey.PriceToAccreditationValue</td>
-										<td>@survey.PriceToCityValue</td>
+										<td>@survey.User.Name</td>
+										<td>@Math.Round(survey.AccreditationToCityValue, 3, MidpointRounding.AwayFromZero)</td>
+										<td>@Math.Round(survey.FacilityToAccreditationValue, 3, MidpointRounding.AwayFromZero)</td>
+										<td>@Math.Round(survey.FacilityToCityValue, 3, MidpointRounding.AwayFromZero)</td>
+										<td>@Math.Round(survey.FacilityToPriceValue, 3, MidpointRounding.AwayFromZero)</td>
+										<td>@Math.Round(survey.PriceToAccreditationValue, 3, MidpointRounding.AwayFromZero)</td>
+										<td>@Math.Round(survey.PriceToCityValue, 3, MidpointRounding.AwayFromZero)</td>
 									</tr>
 								}                            
                             </tbody>
