@@ -31,7 +31,7 @@ namespace Thunder.Controllers
             }
             catch (Exception error)
             {
-                logger.LogError(error.InnerException.Message, "Auth Controller - Login Error");
+                logger.LogError(error.Message, "Auth Controller - Login Error");
                 throw;
             }
         }
@@ -44,7 +44,7 @@ namespace Thunder.Controllers
             }
             catch (Exception error)
             {
-                logger.LogError(error.InnerException.Message, "Auth Controller - Get Claims Error");
+                logger.LogError(error.Message, "Auth Controller - Get Claims Error");
                 throw;
             }
         }
@@ -113,7 +113,7 @@ namespace Thunder.Controllers
             }
             catch (Exception error)
             {
-                logger.LogError(error.InnerException.Message, "Auth Controller - Google Response");
+                logger.LogError(error.Message, "Auth Controller - Google Response");
                 throw;
             }
         }
@@ -127,7 +127,7 @@ namespace Thunder.Controllers
             }
             catch (Exception error)
             {
-                logger.LogError(error.InnerException.Message, "Auth Controller - Logout");
+                logger.LogError(error.Message, "Auth Controller - Logout");
                 throw;
             }
         }
