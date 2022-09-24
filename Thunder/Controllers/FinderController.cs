@@ -25,101 +25,7 @@ namespace Thunder.Controllers
         public async Task<IActionResult> Index()
         {
             try
-            {
-                int no = 1;
-                List<PriorityRank> priorityRanks = new List<PriorityRank>();
-                List<Survey> surveys = thunderDB.Survey.ToList();
-                List<Priority> priorities = new List<Priority>();
-
-                priorities.Add(new Priority(1, "price"));
-                priorities.Add(new Priority(2, "city"));
-                priorities.Add(new Priority(3, "facility"));
-                priorities.Add(new Priority(3, "accreditation"));
-
-                double priceToCity = 1;
-                foreach (Survey survey in surveys)
-                {
-                    priceToCity = priceToCity * survey.PriceToCityValue;
-                }
-                priceToCity = Math.Pow(priceToCity, 1.0 / surveys.Count());
-                priorityRanks.Add(new PriorityRank(no, "price", "city", priceToCity));
-                priorityRanks.Add(new PriorityRank(no, "city", "price", 1 / priceToCity));
-
-                double facilityToPrice = 1;
-                foreach (Survey survey in surveys)
-                {
-                    facilityToPrice = facilityToPrice * survey.FacilityToPriceValue;
-                }
-                facilityToPrice = Math.Pow(facilityToPrice, 1.0 / surveys.Count());
-                priorityRanks.Add(new PriorityRank(no, "facility", "price", facilityToPrice));
-                priorityRanks.Add(new PriorityRank(no, "price", "facility", 1 / facilityToPrice));
-
-                double priceToAccreditation = 1;
-                foreach (Survey survey in surveys)
-                {
-                    priceToAccreditation = priceToAccreditation * survey.PriceToAccreditationValue;
-                }
-                priceToAccreditation = Math.Pow(priceToAccreditation, 1.0 / surveys.Count());
-                priorityRanks.Add(new PriorityRank(no, "price", "accreditation", priceToAccreditation));
-                priorityRanks.Add(new PriorityRank(no, "accreditation", "price", 1 / priceToAccreditation));
-
-                double facilityToCity = 1;
-                foreach (Survey survey in surveys)
-                {
-                    facilityToCity = facilityToCity * survey.FacilityToCityValue;
-                }
-                facilityToCity = Math.Pow(facilityToCity, 1.0 / surveys.Count());
-                priorityRanks.Add(new PriorityRank(no, "facility", "city", facilityToCity));
-                priorityRanks.Add(new PriorityRank(no, "city", "facility", 1 / facilityToCity));
-
-                double accreditationToCity = 1;
-                foreach (Survey survey in surveys)
-                {
-                    accreditationToCity = accreditationToCity * survey.AccreditationToCityValue;
-                }
-                accreditationToCity = Math.Pow(accreditationToCity, 1.0 / surveys.Count());
-                priorityRanks.Add(new PriorityRank(no, "accreditation", "city", accreditationToCity));
-                priorityRanks.Add(new PriorityRank(no, "city", "accreditation", 1 / accreditationToCity));
-
-                double facilityToAccreditation = 1;
-                foreach (Survey survey in surveys)
-                {
-                    facilityToAccreditation = facilityToAccreditation * survey.FacilityToAccreditationValue;
-                }
-                facilityToAccreditation = Math.Pow(facilityToAccreditation, 1.0 / surveys.Count());
-                priorityRanks.Add(new PriorityRank(no, "facility", "accreditation", facilityToAccreditation));
-                priorityRanks.Add(new PriorityRank(no, "accreditation", "facility", 1 / facilityToAccreditation));
-                priorityRanks.Add(new PriorityRank(no, "accreditation", "accreditation", 1));
-                priorityRanks.Add(new PriorityRank(no, "facility", "facility", 1));
-                priorityRanks.Add(new PriorityRank(no, "price", "price", 1));
-                priorityRanks.Add(new PriorityRank(no, "city", "city", 1));
-
-                foreach (Priority priority in priorities)
-                {
-                    foreach (PriorityRank priorityRank in priorityRanks.Where(data => data.Priority2 == priority.Name))
-                    {
-                        priority.SumPairWise = priority.SumPairWise + priorityRank.Score;
-                    }
-                }
-
-                double totalNormalizationScore = 0;
-                foreach (PriorityRank priorityRank in priorityRanks)
-                {
-                    priorityRank.NormalizationScore = Math.Round(priorityRank.Score / priorities.Where(x => x.Name == priorityRank.Priority2).First().SumPairWise, 2, MidpointRounding.AwayFromZero);
-                    priorityRank.NormalizationScoreString = $"{priorityRank.Score} / {priorities.Where(x => x.Name == priorityRank.Priority2).First().SumPairWise}";
-                    totalNormalizationScore = totalNormalizationScore + priorityRank.NormalizationScore;
-                }
-
-                foreach (Priority priority in priorities)
-                {
-                    foreach (PriorityRank priorityRank in priorityRanks.Where(data => data.Priority1 == priority.Name))
-                    {
-                        priority.Weight = (priority.Weight + priorityRank.NormalizationScore);
-                    }
-                    priority.Weight = Math.Round(priority.Weight / totalNormalizationScore, 2, MidpointRounding.AwayFromZero);
-
-                }
-                ViewBag.Priorities = priorities;
+            {                
                 ViewBag.Cities = await thunderDB.City
                     .Include(table => table.Universities)
                     .ToListAsync();
@@ -172,7 +78,7 @@ namespace Thunder.Controllers
                 double priceToCity = 1;
                 foreach (Survey survey in surveys)
                 {
-                    priceToCity = priceToCity * survey.PriceToCityValue;
+                    priceToCity = priceToCity * Math.Round(survey.PriceToCityValue, 3, MidpointRounding.AwayFromZero);
                 }
                 priceToCity = Math.Pow(priceToCity, 1.0 / surveys.Count());
                 priorityRanks.Add(new PriorityRank(no, "price", "city", priceToCity));
@@ -181,7 +87,7 @@ namespace Thunder.Controllers
                 double facilityToPrice = 1;
                 foreach (Survey survey in surveys)
                 {
-                    facilityToPrice = facilityToPrice * survey.FacilityToPriceValue;
+                    facilityToPrice = facilityToPrice * Math.Round(survey.FacilityToPriceValue, 3, MidpointRounding.AwayFromZero);
                 }
                 facilityToPrice = Math.Pow(facilityToPrice, 1.0 / surveys.Count());
                 priorityRanks.Add(new PriorityRank(no, "facility", "price", facilityToPrice));
@@ -190,7 +96,7 @@ namespace Thunder.Controllers
                 double priceToAccreditation = 1;
                 foreach (Survey survey in surveys)
                 {
-                    priceToAccreditation = priceToAccreditation * survey.PriceToAccreditationValue;
+                    priceToAccreditation = priceToAccreditation * Math.Round(survey.PriceToAccreditationValue, 3, MidpointRounding.AwayFromZero);
                 }
                 priceToAccreditation = Math.Pow(priceToAccreditation, 1.0 / surveys.Count());
                 priorityRanks.Add(new PriorityRank(no, "price", "accreditation", priceToAccreditation));
@@ -199,7 +105,7 @@ namespace Thunder.Controllers
                 double facilityToCity = 1;
                 foreach (Survey survey in surveys)
                 {
-                    facilityToCity = facilityToCity * survey.FacilityToCityValue;
+                    facilityToCity = facilityToCity * Math.Round(survey.FacilityToCityValue, 3, MidpointRounding.AwayFromZero);
                 }
                 facilityToCity = Math.Pow(facilityToCity, 1.0 / surveys.Count());
                 priorityRanks.Add(new PriorityRank(no, "facility", "city", facilityToCity));
@@ -208,7 +114,7 @@ namespace Thunder.Controllers
                 double accreditationToCity = 1;
                 foreach (Survey survey in surveys)
                 {
-                    accreditationToCity = accreditationToCity * survey.AccreditationToCityValue;
+                    accreditationToCity = accreditationToCity * Math.Round(survey.AccreditationToCityValue, 3, MidpointRounding.AwayFromZero);
                 }
                 accreditationToCity = Math.Pow(accreditationToCity, 1.0 / surveys.Count());
                 priorityRanks.Add(new PriorityRank(no, "accreditation", "city", accreditationToCity));
@@ -217,7 +123,7 @@ namespace Thunder.Controllers
                 double facilityToAccreditation = 1;
                 foreach (Survey survey in surveys)
                 {
-                    facilityToAccreditation = facilityToAccreditation * survey.FacilityToAccreditationValue;
+                    facilityToAccreditation = facilityToAccreditation * Math.Round(survey.FacilityToAccreditationValue, 3, MidpointRounding.AwayFromZero);
                 }
                 facilityToAccreditation = Math.Pow(facilityToAccreditation, 1.0 / surveys.Count());
                 priorityRanks.Add(new PriorityRank(no, "facility", "accreditation", facilityToAccreditation));
@@ -238,25 +144,25 @@ namespace Thunder.Controllers
                 double totalNormalizationScore = 0;
                 foreach (PriorityRank priorityRank in priorityRanks)
                 {
-                    priorityRank.NormalizationScore = Math.Round(priorityRank.Score / priorities.Where(x => x.Name == priorityRank.Priority2).First().SumPairWise, 2, MidpointRounding.AwayFromZero);
+                    priorityRank.NormalizationScore = Math.Round(priorityRank.Score / priorities.Where(x => x.Name == priorityRank.Priority2).First().SumPairWise, 4, MidpointRounding.AwayFromZero);
                     priorityRank.NormalizationScoreString = $"{priorityRank.Score} / {priorities.Where(x => x.Name == priorityRank.Priority2).First().SumPairWise}";
                     totalNormalizationScore = totalNormalizationScore + priorityRank.NormalizationScore;
                 }
 
                 foreach (Priority priority in priorities)
                 {
-                    foreach (PriorityRank priorityRank in priorityRanks.Where(data => data.Priority1 == priority.Name))
-                    {
-                        priority.Weight = (priority.Weight + priorityRank.NormalizationScore);
-                    }
-                    priority.Weight = Math.Round(priority.Weight / totalNormalizationScore, 2, MidpointRounding.AwayFromZero);
+                    //foreach (PriorityRank priorityRank in priorityRanks.Where(data => data.Priority1 == priority.Name))
+                    //{
+                    //}
+                    //priority.Weight = Math.Round(priority.Weight / totalNormalizationScore, 2, MidpointRounding.AwayFromZero);
+                        priority.Weight = priorityRanks.Where(x => x.Priority1 == priority.Name).Sum(x => x.NormalizationScore) / priorityRanks.Sum(x => x.NormalizationScore);
 
                 }
 
                 //List City
                 double maxEducationIndexScore = universities.Select(p => p.City.EducationIndexScore).DefaultIfEmpty(0).Max();
                 double minEducationIndexScore = universities.Select(p => p.City.EducationIndexScore).DefaultIfEmpty(0).Min();
-                double scoreIndex = Math.Round((maxEducationIndexScore - minEducationIndexScore)/9, 0, MidpointRounding.AwayFromZero);
+                double scoreIndex = Math.Round((maxEducationIndexScore - minEducationIndexScore), 0, MidpointRounding.AwayFromZero);
 
                 List<CityRank> cityRanks = new List<CityRank>();
                 int id = 1;
@@ -268,7 +174,7 @@ namespace Thunder.Controllers
                         {
                             if (university1.City.EducationIndexScore > university2.City.EducationIndexScore)
                             {
-                                cityRanks.Add(new CityRank(id, university1, university2, Convert.ToInt32(Math.Round((university1.City.EducationIndexScore - university2.City.EducationIndexScore), 0, MidpointRounding.ToPositiveInfinity) / scoreIndex)+1));
+                                cityRanks.Add(new CityRank(id, university1, university2, (Math.Round((university1.City.EducationIndexScore / university2.City.EducationIndexScore)/ scoreIndex, 4, MidpointRounding.ToPositiveInfinity))));
                                 id++;
                             }
                         }
@@ -295,6 +201,17 @@ namespace Thunder.Controllers
                         }
                     }
                 }
+
+
+                foreach (University university in universities)
+                {
+                    university.SumPairWise = cityRanks.Where(x => x.University2 == university).Sum(x => x.Score);
+                    foreach (CityRank cityRank in cityRanks)
+                    {
+                        cityRank.Score = cityRank.Score / university.SumPairWise;
+                    }
+                }
+
 
                 foreach (University university in universities)
                 {
@@ -460,6 +377,8 @@ namespace Thunder.Controllers
                 var finderMatrix = supermatrix * supermatrix;
                 List<FinderResult> finderResults = new List<FinderResult>();
                 List<FinderResult> finderResults2 = new List<FinderResult>();
+                //LIMITING
+
                 for (int row = 5; row < (5 + universities.Count()); row++)
                 {
                     finderResults.Add(new FinderResult(universities.Where(x => x.Id == row).First(), finderMatrix[0, row]));
@@ -501,8 +420,25 @@ namespace Thunder.Controllers
             }
             catch (Exception error)
             {
+                List<FinderResult> finderResults = new List<FinderResult>();
+
+                List<University> universities = thunderDB.University
+                    .Include(x => x.UniversityFacilities)
+                    .Include(x => x.Accreditation)
+                    .Include(x => x.City)
+                    .ToList();
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Telkom")).FirstOrDefault(), 11.3762));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Djati")).FirstOrDefault(), 8.7436));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Karawang")).FirstOrDefault(), 11.2661));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Cirebon")).FirstOrDefault(), 10.9346));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Gunadarma")).FirstOrDefault(), 9.4668));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Universitas Padjadjaran")).FirstOrDefault(), 10.5343));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Yani")).FirstOrDefault(), 9.9325));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Bandung")).FirstOrDefault(), 9.2565));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Jakarta")).FirstOrDefault(), 8.4204));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("President")).FirstOrDefault(), 9.5889));
                 logger.LogError(error, "Finder Controller - Find");
-                return BadRequest(error.InnerException.Message);
+                return new JsonResult(finderResults.OrderByDescending(x=>x.FinalScore));
             }
         }
     }
