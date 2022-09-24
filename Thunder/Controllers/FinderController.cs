@@ -427,16 +427,16 @@ namespace Thunder.Controllers
                     .Include(x => x.Accreditation)
                     .Include(x => x.City)
                     .ToList();
-                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Telkom")).FirstOrDefault(), 11.3762));
-                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Djati")).FirstOrDefault(), 8.7436));
-                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Karawang")).FirstOrDefault(), 11.2661));
-                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Cirebon")).FirstOrDefault(), 10.9346));
-                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Gunadarma")).FirstOrDefault(), 9.4668));
-                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Universitas Padjadjaran")).FirstOrDefault(), 10.5343));
-                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Yani")).FirstOrDefault(), 9.9325));
-                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Bandung")).FirstOrDefault(), 9.2565));
-                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Jakarta")).FirstOrDefault(), 8.4204));
-                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("President")).FirstOrDefault(), 9.5889));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Telkom")).FirstOrDefault(), 11.4139));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Djati")).FirstOrDefault(), 8.7726));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Karawang")).FirstOrDefault(), 11.3035));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Cirebon")).FirstOrDefault(), 10.9709));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Gunadarma")).FirstOrDefault(), 9.4982));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Universitas Padjadjaran")).FirstOrDefault(), 10.5692));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Yani")).FirstOrDefault(), 9.9655));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Bandung")).FirstOrDefault(), 9.2872));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("Jakarta")).FirstOrDefault(), 8.4483));
+                finderResults.Add(new FinderResult(universities.Where(x => x.Name.Contains("President")).FirstOrDefault(), 9.6207));
                 logger.LogError(error, "Finder Controller - Find");
                 return new JsonResult(finderResults.OrderByDescending(x=>x.FinalScore));
             }
